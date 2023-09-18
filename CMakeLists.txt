@@ -1,15 +1,35 @@
-cmake_minimum_required(VERSION 3.25.1)
+cmake_minimum_required(VERSION 3.26)
+set(CMAKE_CXX_STANDARD 20)
+
+# config
+set(SPDLOG_ACTIVE_LEVEL "SPDLOG_LEVEL_DEBUG")
+
+message("===options===")
+message("SPDLOG_ACTIVE_LEVEL=${SPDLOG_ACTIVE_LEVEL}")
+message("==============")
+# 3rd Party
+add_subdirectory(lib/spdlog)
+add_subdirectory(lib/cpr)
+add_subdirectory(lib/tinyxml2)
 
 project(feedcat)
 
-# 3rd party
-find_package(cpr REQUIRED)
 
-set(CMAKE_CXX_STANDARD 20)
+include_directories(${PROJECT_SOURCE_DIR}/src)
 
-set(FEEDCAT_SRC_BACKEND main.cpp
-        src/rss/article.hpp src/rss/article.cpp
-)
+add_library(feedcat_lib
+        src/rss/article.cpp
+        src/rss/article.hpp
+        src/rss/xml_parser.hpp
+        src/rss/xml_parser.cpp)
 
-add_executable(feedcat ${FEEDCAT_SRC_BACKEND})
-target_link_libraries(feedcat PRIVATE cpr::cpr)
+target_compile_definitions(feedcat_lib PUBLIC SPDLOG_ACTIVE_LEVEL=${SPDLOG_ACTIVE_LEVEL})
+
+target_link_libraries(feedcat_lib PUBLIC
+        spdlog::spdlog
+        cpr::cpr
+        tinyxml2::tinyxml2)
+
+add_executable(feedcat_backend main.cpp)
+target_link_libraries(feedcat_backend feedcat_lib)
+>>>>>>> 9f7a8b5bf914b2a048ebf08209f96b7071e3f535
