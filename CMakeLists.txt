@@ -37,3 +37,4 @@ target_link_libraries(feedcat_lib PUBLIC
 
 add_executable(feedcat_backend main.cpp)
 target_link_libraries(feedcat_backend feedcat_lib)
+>>>>>>> 9f7a8b5bf914b2a048ebf08209f96b7071e3f535
