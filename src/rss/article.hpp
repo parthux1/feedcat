@@ -4,6 +4,7 @@
 #pragma once
 
 #include <string>
+#include <optional>
 
 namespace RSS {
 
@@ -19,6 +20,7 @@ namespace RSS {
         std::string title;
         std::string description;
         std::string date; // TODO: change this to a date type
+        std::optional<std::string> fulltext = {};
     };
 
 }
