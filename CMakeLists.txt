@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.26)
 set(CMAKE_CXX_STANDARD 20)
 
+project(feedcat)
+
 # config
 set(SPDLOG_ACTIVE_LEVEL "SPDLOG_LEVEL_DEBUG")
 
@@ -11,8 +13,6 @@ message("==============")
 add_subdirectory(lib/spdlog)
 add_subdirectory(lib/cpr)
 add_subdirectory(lib/tinyxml2)
-
-project(feedcat)
 
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
@@ -32,4 +32,3 @@ target_link_libraries(feedcat_lib PUBLIC
 
 add_executable(feedcat_backend main.cpp)
 target_link_libraries(feedcat_backend feedcat_lib)
->>>>>>> 9f7a8b5bf914b2a048ebf08209f96b7071e3f535
