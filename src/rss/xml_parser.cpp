@@ -6,14 +6,14 @@
 
 using namespace RSS;
 
-XML::XMLParser::XMLParser(bool exit_on_failure)
+XML::ParserRSS::ParserRSS(bool exit_on_failure)
     : XMLVisitor(),
       exit_on_failure(exit_on_failure)
 {
 
 }
 
-bool XML::XMLParser::VisitEnter(const tinyxml2::XMLElement& element, const tinyxml2::XMLAttribute* firstAttribute)
+bool XML::ParserRSS::VisitEnter(const tinyxml2::XMLElement& element, const tinyxml2::XMLAttribute* firstAttribute)
 {
     // RSS 2.0 can be parsed like this
     if(element.Name() == std::string("item")) // cast needed
@@ -31,7 +31,7 @@ bool XML::XMLParser::VisitEnter(const tinyxml2::XMLElement& element, const tinyx
     return true;
 }
 
-std::optional<Article> XML::XMLParser::get_article(const tinyxml2::XMLElement &element) noexcept
+std::optional<Article> XML::ParserRSS::get_article(const tinyxml2::XMLElement &element) noexcept
 {
     Article article;
 
@@ -58,7 +58,7 @@ std::optional<Article> XML::XMLParser::get_article(const tinyxml2::XMLElement &e
     return article;
 }
 
-const std::vector<Article>& XML::XMLParser::get_articles() const noexcept
+const std::vector<Article>& XML::ParserRSS::get_articles() const noexcept
 {
     if(skips > 0) SPDLOG_WARN("While parsing {} articles where skipped.", skips);
     return articles;
@@ -68,7 +68,7 @@ std::vector<Article> XML::parse(const std::string &xml) {
     tinyxml2::XMLDocument doc;
     doc.Parse(xml.c_str());
 
-    XMLParser parser;
+    ParserRSS parser;
     doc.Accept(&parser);
     return parser.get_articles();
 }
