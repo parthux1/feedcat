@@ -32,5 +32,5 @@ namespace tinyxml2 {
      * \param html_raw html to strip
      * \returns html without <script></script> tags
      */
-    std::string strip_javascript(const std::string& html_raw);
+    std::string strip_javascript(std::string html_raw);
 }
