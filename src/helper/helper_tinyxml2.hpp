@@ -28,9 +28,10 @@ namespace tinyxml2 {
     std::vector<const XMLElement*> get_all_by_tag(const XMLElement* root, const char* tag);
 
     /*!
-     * \brief Strip javascript from html
+     * \brief strips alll occurances of the given tag
      * \param html_raw html to strip
-     * \returns html without <script></script> tags
+     * \param html tag without < >
+     * \returns html without <tag></tag> tags
      */
-    std::string strip_javascript(std::string html_raw);
+    std::string strip_tag(std::string html_raw, const std::string& tag);
 }

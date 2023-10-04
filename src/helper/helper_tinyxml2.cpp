@@ -17,7 +17,6 @@ namespace tinyxml2 {
             // dfs
             if(child->FirstChildElement())
             {
-                SPDLOG_DEBUG("has child");
                 auto res = get_first_by_attribute(child, attribute, value);
                 if(res.has_value()) return res;
             }
@@ -39,7 +38,6 @@ namespace tinyxml2 {
             if(child->FirstChildElement())
             {
                 auto tmp = get_all_by_tag(child, tag);
-                SPDLOG_DEBUG("inserting {} elements", tmp.size());
                 res.insert(res.end(), tmp.begin(), tmp.end());
             }
         }
@@ -47,46 +45,65 @@ namespace tinyxml2 {
     }
 
 
-    std::string strip_javascript(std::string html_raw)
+    std::string strip_tag(std::string html_raw, const std::string& tag)
     {
-        // regex crashes on execution with segmentation fault. The file may be too long
-        //std::regex r_scripts("<script.*?>(.|\\s)*?<\\/script>", std::regex_constants::optimize);
-        // we thus remove script tokens the manual way..
+        const static std::vector<std::string_view> selfclosing_tags = {
+                "link", "base", "br", "col", "embed", "hr", "img", "input",
+                "meta", "param", "source", "track", "wbr", "colgroup"
+        };
 
-        const static std::vector<std::string> tokens{"<script", "</script", ">"};
-        auto token = tokens.begin(); // currently handled token
-
-        std::size_t offset_parser = 0; // current parser position
-        std::size_t offset_first_token = 0; // position of currently found <script
-        bool reset_pos = false;
-        while(html_raw.find(*tokens.begin(), 0) != std::string::npos) // run as long <script tokens exist
+        if(std::find(selfclosing_tags.begin(), selfclosing_tags.end(), tag) != selfclosing_tags.end())
         {
-            const auto pos = html_raw.find(*token, offset_parser); // pos does not start at offset_parser
+            SPDLOG_DEBUG("{} is a selfclosing tag. Will remove <{}...> elements before proceeding with normal regex.", tag, tag);
 
-            if(pos == std::string::npos) break;
+            std::regex r_selfclosing_tag{fmt::format("<{}[^]*?>", tag)};
 
-            if(token == tokens.begin())
+            std::smatch match;
+            while(std::regex_search(html_raw, match, r_selfclosing_tag))
             {
-                offset_first_token = pos;
-            }
-            // remove everything
-            else if(token == tokens.end()-1)
-            {
-                const std::size_t amount = (pos-offset_first_token)+1;
-                html_raw.replace(offset_first_token, amount, "");
-                reset_pos = true;
-            }
-            offset_parser = pos;
+                const std::size_t start = match.position();
+                const std::size_t n = match.length();
 
-            // update states
-            if(reset_pos)
-            {
-                reset_pos = false;
-                offset_parser = 0;
-                offset_first_token = 0;
+                SPDLOG_TRACE("Removing {} chars from {}:\n{}", n, start, html_raw.substr(start, n));
+                html_raw.replace(start, n, "");
             }
-            if(++token == tokens.end()) token = tokens.begin();
+
         }
+
+        std::regex r_start_tag{fmt::format("<{}[^>]*>", tag)};       // match all start tags
+        std::regex r_close_tag{fmt::format("</{}[^>]*>", tag)};       // match all close tags
+        std::regex r_standalone_tag{fmt::format("<{}[^>]*/>", tag)};// match all standalone tags
+
+        //html_raw = std::regex_replace(html_raw, r_standalone_tag, "");
+
+        std::smatch match_standalone;
+        while(std::regex_search(html_raw, match_standalone, r_standalone_tag))
+        {
+            const std::size_t start = match_standalone.position();
+            const std::size_t n = match_standalone.length();
+
+            SPDLOG_TRACE("Removing {} chars from {}:\n{}", n, start, html_raw.substr(start, n));
+            html_raw.replace(start, n, "");
+        }
+
+        // for enclosing tags we want to delete everything within
+        std::smatch match_begin;
+        std::smatch match_close;
+        while(std::regex_search(html_raw, match_begin, r_start_tag))
+        {
+            if(!std::regex_search(html_raw, match_close, r_close_tag))
+            {
+                SPDLOG_CRITICAL("Tag {} opened but no regex match for closing tag. Content:\n{}", tag, html_raw.substr(match_begin.position()));
+            }
+
+            const std::size_t start = match_begin.position();
+            const std::size_t n = match_close.position() - start + match_close.length();
+
+            SPDLOG_TRACE("Removing {} chars from {}:\n{}", n, start, html_raw.substr(start, n));
+
+            html_raw.replace(start, n, "");
+        }
+
         return html_raw;
     }
 }
