@@ -1,9 +1,9 @@
 [submodule "lib/cpr"]
-	path = lib/cpr
+	path = src/backend/lib/cpr
 	url = https://github.com/libcpr/cpr.git
 [submodule "lib/spdlog"]
-	path = lib/spdlog
+	path = src/backend/lib/spdlog
 	url = https://github.com/gabime/spdlog.git
 [submodule "lib/tinyxml2"]
-	path = lib/tinyxml2
+	path = src/backend/lib/tinyxml2
 	url = https://github.com/leethomason/tinyxml2.git
