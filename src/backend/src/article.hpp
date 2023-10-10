@@ -19,8 +19,8 @@ namespace RSS {
         std::string url;
         std::string title;
         std::string description;
-        std::string date; // TODO: change this to a date type
         std::optional<std::string> fulltext = {};
+        std::string date;
     };
 
 }
