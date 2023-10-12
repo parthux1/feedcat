@@ -6,8 +6,12 @@ project(feedcat)
 # config
 set(SPDLOG_ACTIVE_LEVEL "SPDLOG_LEVEL_DEBUG")
 
+# 3rd party
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib)
+
+# targets
 add_subdirectory(${PROJECT_SOURCE_DIR}/src/backend)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/src/console)
 
-#add_subdirectory(${PROJECT_SOURCE_DIR}/src/tui)
+add_subdirectory(${PROJECT_SOURCE_DIR}/src/tui)
