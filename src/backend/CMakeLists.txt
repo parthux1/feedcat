@@ -10,8 +10,13 @@ add_library(feedcat_backend
         rss/parser_fulltext_impl/Ntv.hpp
         helper/helper_tinyxml2.hpp
         helper/helper_tinyxml2.cpp
-        db/article_database.cpp
-        db/article_database.hpp)
+        #db/article_database.cpp
+        #db/article_database.hpp
+)
+
+target_include_directories(feedcat_backend PUBLIC
+        ${CMAKE_SOURCE_DIR}/lib
+        .)
 
 target_compile_definitions(feedcat_backend PUBLIC SPDLOG_ACTIVE_LEVEL=${SPDLOG_ACTIVE_LEVEL})
 

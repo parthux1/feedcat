@@ -9,7 +9,7 @@
 #include <tinyxml2.h>
 #include <helper/helper_tinyxml2.hpp>
 
-#include <rss/article.hpp>
+#include <article.hpp>
 namespace RSS {
 
     class ProviderStrategy{};

@@ -8,7 +8,7 @@
 
 #include <tinyxml2.h>
 #include <spdlog/spdlog.h>
-#include <rss/article.hpp>
+#include <article.hpp>
 
 namespace RSS::XML
 {
