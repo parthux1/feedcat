@@ -3,7 +3,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_library(feedcat_db
         database_interface.hpp
-        database_interface.cpp
 )
 
 target_include_directories(feedcat_db PUBLIC
