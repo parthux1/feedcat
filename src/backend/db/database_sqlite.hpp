@@ -20,7 +20,13 @@ public:
 
     bool store_article(const RSS::Article& article) override;
 
-    bool article_exists(const RSS::Article& article) override;
+    bool article_exists(const RSS::Article& url) const override;
+
+    bool article_exists(const std::string& url) const override;
+
+    std::optional<RSS::Article> get_article(std::string url) const override;
+
+    std::size_t count_articles() const override;
 
     // Singleton behavior
     DatabaseSqlLite(const DatabaseSqlLite&) = delete;

@@ -54,21 +54,66 @@ bool DatabaseSqlLite::store_article(const RSS::Article &article)
     }
 }
 
-bool DatabaseSqlLite::article_exists(const RSS::Article& article)
+bool DatabaseSqlLite::article_exists(const RSS::Article& article) const
+{
+    return article_exists(article.url);
+}
+
+bool DatabaseSqlLite::article_exists(const std::string& url) const
 {
     const std::string statement = "SELECT EXISTS(SELECT 1 FROM article WHERE url = ?)";
     SQLite::Statement query(*db, statement);
 
     try
     {
-        query.bind(1, article.url);
+        query.bind(1, url);
         query.executeStep();
         int flag = query.getColumn(0);
         return flag;
     }catch (const std::exception& e)
     {
-        SPDLOG_ERROR("Failed to check if article exists: {}. Exception: {}", article.url, e.what());
+        SPDLOG_ERROR("Failed to check if article exists: {}. Exception: {}", url, e.what());
 
     }
     return false;
+}
+
+std::optional<RSS::Article> DatabaseSqlLite::get_article(std::string url) const
+{
+    if(!article_exists(url)) return std::nullopt;
+
+    SQLite::Statement query(*db, "SELECT * FROM article WHERE url = ?");
+    query.bind(1, url);
+
+    // get first res
+    query.executeStep();
+
+    std::optional<std::string> fulltext = std::nullopt;
+    if(!query.getColumn("fulltext").isNull()) fulltext = query.getColumn("fulltext");
+
+    RSS::Article article{
+        query.getColumn("url"),
+        query.getColumn("title"),
+        query.getColumn("description"),
+        fulltext,
+        query.getColumn("date")
+    };
+
+    // we only expect one result
+    if(query.executeStep())
+    {
+        std::size_t count = 2;
+        while(query.executeStep()) count++;
+        SPDLOG_WARN("Found {} entries for url {}. Returning first.", count, url);
+    }
+
+    return article;
+}
+
+std::size_t DatabaseSqlLite::count_articles() const
+{
+    SQLite::Statement query(*db, "SELECT COUNT(*) FROM article");
+    query.executeStep();
+    int result = query.getColumn(0);
+    return result;
 }
