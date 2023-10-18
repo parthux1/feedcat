@@ -10,18 +10,15 @@
 #include <helper/helper_tinyxml2.hpp>
 
 #include <article.hpp>
+
+/* To implement a fulltext parser
+ * a) inherit from ParserFullText - NV Interface
+ * b) implement _impl functions
+*/
+
+
 namespace RSS {
 
-    class ProviderStrategy{};
-    // force usage of derived class which can be used to specialize functions
-    template<typename T>
-    concept ExplicitMarkedAsProvider = std::derived_from<T, ProviderStrategy> && !std::is_same_v<T, ProviderStrategy>;
-
-    /*!
-     * Implement fulltext parsing for different newsletters
-     */
-    template <typename P>
-    requires ExplicitMarkedAsProvider<P>
     class ParserFulltext
     {
     public:
@@ -31,19 +28,18 @@ namespace RSS {
          * \brief get fulltext from an url
          * \param url query fulltext from this url
          */
-        static std::optional<std::string> get_fulltext(const std::string& url)
+        std::optional<std::string> get_fulltext(const std::string& url)
         {
-            SPDLOG_WARN("get_fulltext not implemented for provider {}", typeid(P).name());
-            return std::nullopt;
+            return get_fulltext_impl(url);
         }
 
         /*!
          * \brief Insert fulltext of an article
          * \returns true if fulltext was added
          */
-        static bool get_fulltext(Article& article)
+        bool get_fulltext(Article& article)
         {
-            const auto fulltext = get_fulltext(article.url);
+            const auto fulltext = get_fulltext_impl(article.url);
             if(!fulltext.has_value())
             {
                 SPDLOG_WARN("Couldn't get fulltext for article {}", article.url);
@@ -53,6 +49,8 @@ namespace RSS {
             return true;
         }
 
+    protected:
+        virtual std::optional<std::string> get_fulltext_impl(const std::string& url) = 0;
     };
 
 }
