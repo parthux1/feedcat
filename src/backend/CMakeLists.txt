@@ -6,10 +6,11 @@ add_subdirectory(db)
 add_library(feedcat_backend
         article.cpp
         article.hpp
-        rss/xml_parser.hpp
-        rss/xml_parser.cpp
+        rss/parser_rss.hpp
+        rss/parser_rss.cpp
         rss/parser_fulltext.hpp
         rss/parser_fulltext_impl/Ntv.hpp
+        rss/parser_fulltext_impl/Ntv.cpp
         helper/helper_tinyxml2.hpp
         helper/helper_tinyxml2.cpp
 )

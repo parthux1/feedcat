@@ -2,7 +2,7 @@
 // Created by parthu on 9/2/23.
 //
 
-#include "xml_parser.hpp"
+#include "parser_rss.hpp"
 
 using namespace RSS;
 
@@ -48,7 +48,7 @@ std::optional<Article> XML::ParserRSS::get_article(const tinyxml2::XMLElement &e
 
         if(xml_node == nullptr || xml_node->GetText() == nullptr)
         {
-            SPDLOG_WARN("Article is missing Tag:{}", tag);
+            SPDLOG_DEBUG("Article is missing Tag:{}", tag);
             return std::nullopt;
         }
 
