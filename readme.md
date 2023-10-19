@@ -10,6 +10,11 @@ Categorize RSS feeds.
 - [n-tv](https://www.n-tv.de/software/RSS-Feeds-article6210.html)
 
 ## Requirements
-| package | req. package |
-| --- | --- |
-| [sqlite_orm](https://github.com/fnc12/sqlite_orm/tree/master) | sqlite3 |
+| package                                              | req. package |
+|------------------------------------------------------| --- |
+| [SQLiteCpp](https://github.com/SRombauts/SQLiteCpp/) | sqlite3 |
+
+
+## TODOs
+- [ ] adaptive poll rate for known sources
+- [ ] wrapper class for RSS urls allowing querying groups of urls
