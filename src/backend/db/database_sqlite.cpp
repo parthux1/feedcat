@@ -3,6 +3,8 @@
 //
 #include "database_sqlite.hpp"
 
+// Static access
+
 std::shared_ptr<DatabaseSqlLite> DatabaseSqlLite::get_instance(){
     // meyers singleton
     static auto instance = std::shared_ptr<DatabaseSqlLite>(new DatabaseSqlLite());
@@ -27,6 +29,48 @@ DatabaseSqlLite::DatabaseSqlLite(std::string db_name)
         SPDLOG_ERROR("Error opening database: {}", e.what());
         throw e;
     }
+}
+
+// public overrides
+
+std::optional<RSS::Article> DatabaseSqlLite::get_article(std::string url) const
+{
+    if(!article_exists(url)) return std::nullopt;
+
+    SQLite::Statement query(*db, "SELECT * FROM article WHERE url = ?");
+    query.bind(1, url);
+
+    // get first res
+    query.executeStep();
+
+    std::optional<std::string> fulltext = std::nullopt;
+    if(!query.getColumn("fulltext").isNull()) fulltext = query.getColumn("fulltext");
+
+    RSS::Article article{
+            query.getColumn("url"),
+            query.getColumn("title"),
+            query.getColumn("description"),
+            fulltext,
+            query.getColumn("date")
+    };
+
+    // we only expect one result
+    if(query.executeStep())
+    {
+        std::size_t count = 2;
+        while(query.executeStep()) count++;
+        SPDLOG_WARN("Found {} entries for url {}. Returning first.", count, url);
+    }
+
+    return article;
+}
+
+std::size_t DatabaseSqlLite::count_articles() const
+{
+    SQLite::Statement query(*db, "SELECT COUNT(*) FROM article");
+    query.executeStep();
+    int result = query.getColumn(0);
+    return result;
 }
 
 bool DatabaseSqlLite::store_article(const RSS::Article &article)
@@ -54,12 +98,9 @@ bool DatabaseSqlLite::store_article(const RSS::Article &article)
     }
 }
 
-bool DatabaseSqlLite::article_exists(const RSS::Article& article) const
-{
-    return article_exists(article.url);
-}
+// NVI implementations
 
-bool DatabaseSqlLite::article_exists(const std::string& url) const
+bool DatabaseSqlLite::article_exists_impl(const std::string& url) const
 {
     const std::string statement = "SELECT EXISTS(SELECT 1 FROM article WHERE url = ?)";
     SQLite::Statement query(*db, statement);
@@ -78,42 +119,35 @@ bool DatabaseSqlLite::article_exists(const std::string& url) const
     return false;
 }
 
-std::optional<RSS::Article> DatabaseSqlLite::get_article(std::string url) const
+std::size_t DatabaseSqlLite::update_article_impl(const std::string& url_old, const RSS::Article& article_new)
 {
-    if(!article_exists(url)) return std::nullopt;
+    // get amount of entries updated
+    SQLite::Statement query_count(*db, "SELECT COUNT(*) FROM article WHERE url = ?");
+    query_count.bind(1, url_old);
+    query_count.executeStep();
 
-    SQLite::Statement query(*db, "SELECT * FROM article WHERE url = ?");
-    query.bind(1, url);
+    std::size_t count = query_count.getColumn(0).getInt();
 
-    // get first res
-    query.executeStep();
-
-    std::optional<std::string> fulltext = std::nullopt;
-    if(!query.getColumn("fulltext").isNull()) fulltext = query.getColumn("fulltext");
-
-    RSS::Article article{
-        query.getColumn("url"),
-        query.getColumn("title"),
-        query.getColumn("description"),
-        fulltext,
-        query.getColumn("date")
-    };
-
-    // we only expect one result
-    if(query.executeStep())
+    if(count>1)
     {
-        std::size_t count = 2;
-        while(query.executeStep()) count++;
-        SPDLOG_WARN("Found {} entries for url {}. Returning first.", count, url);
+        SPDLOG_WARN("Found {} entries for url {}. Updating all.", count, url_old);
     }
 
-    return article;
-}
 
-std::size_t DatabaseSqlLite::count_articles() const
-{
-    SQLite::Statement query(*db, "SELECT COUNT(*) FROM article");
-    query.executeStep();
-    int result = query.getColumn(0);
-    return result;
+    // update all
+    SQLite::Transaction t{*db};
+    SQLite::Statement query(*db, "UPDATE article SET url=?, title=?, description=?, fulltext=?, date=? WHERE url=?");
+    const std::string fulltext = article_new.fulltext.has_value() ? article_new.fulltext.value() : "";
+
+    query.bind(1, article_new.url);
+    query.bind(2, article_new.url);
+    query.bind(3, article_new.title);
+    query.bind(4, article_new.description);
+    query.bind(5, fulltext);
+    query.bind(6, url_old);
+
+    query.exec();
+    t.commit();
+
+    return count;
 }

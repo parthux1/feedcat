@@ -2,6 +2,7 @@ set(CMAKE_CXX_STANDARD 20) # for stringview .endswith
 
 add_library(feedcat_db
         database_interface.hpp
+        database_interface.cpp
         database_sqlite.hpp
         database_sqlite.cpp
 )

@@ -15,28 +15,34 @@
 
 class DatabaseSqlLite : public DatabaseInterface
 {
-public:
-    static std::shared_ptr<DatabaseSqlLite> get_instance();
-
-    bool store_article(const RSS::Article& article) override;
-
-    bool article_exists(const RSS::Article& url) const override;
-
-    bool article_exists(const std::string& url) const override;
-
-    std::optional<RSS::Article> get_article(std::string url) const override;
-
-    std::size_t count_articles() const override;
-
     // Singleton behavior
+public:
     DatabaseSqlLite(const DatabaseSqlLite&) = delete;
     DatabaseSqlLite& operator=(const DatabaseSqlLite&) = delete;
 
     // leaked for static shared_ptr instance in get_instance()
     ~DatabaseSqlLite() = default;
+
+    static std::shared_ptr<DatabaseSqlLite> get_instance();
+
+    // non-NVI overrides
+public:
+    bool store_article(const RSS::Article& article) override;
+
+    std::optional<RSS::Article> get_article(std::string url) const override;
+
+    std::size_t count_articles() const override;
+
+    // NVI implementations
 private:
+    bool article_exists_impl(const std::string& url) const override;
+
+    std::size_t update_article_impl(const std::string& url_old, const RSS::Article& article_new) override;
+
+private:
+
     /*!
-     *
+     * Create a new DB-Connection
      * @param db_name name to open/create
      * @throws SQLite::Exception
      */
