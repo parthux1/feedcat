@@ -16,6 +16,32 @@ std::vector<Article> XML::parse(const std::string &xml, const std::optional<std:
     return parser.get_articles();
 }
 
+std::vector<Article> XML::parse(const std::string& url, std::optional<ParserFulltext*> parser)
+{
+    if(parser.has_value())
+    {
+        const auto known_urls = parser.value()->get_known_urls();
+        const bool exists = std::find(known_urls.begin(), known_urls.end(), url) != known_urls.end();
+        if(!exists) throw std::runtime_error("URL is not supported by the given parser.");
+    }
+
+    cpr::Response r = cpr::Get(cpr::Url{url});
+    auto res = XML::parse(r.text, url);
+
+    if(!parser.has_value()) return res;
+
+    // Get fulltext
+    for(auto& a : res)
+    {
+        if(!parser.value()->get_fulltext(a))
+        {
+            SPDLOG_WARN("failed to fetch fulltext of URL: {}", a.url);
+        }
+    }
+
+    return res;
+}
+
 // internal parser implementation
 
 XML::ParserRSS::ParserRSS(bool exit_on_failure, const std::optional<std::string>& rss_source)

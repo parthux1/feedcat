@@ -8,7 +8,10 @@
 
 #include <tinyxml2.h>
 #include <spdlog/spdlog.h>
+#include <cpr/cpr.h>
+
 #include <article.hpp>
+#include <rss/parser_fulltext.hpp>
 
 namespace RSS::XML
 {
@@ -19,6 +22,15 @@ namespace RSS::XML
      * \return a vector of articles without fulltext
      */
     std::vector<Article> parse(const std::string& xml, const std::optional<std::string>& rss_source = std::nullopt);
+
+    /*!
+     * \brief Parse a RSS XML File. If parser is set fulltext queries will be launched for all articles!
+     * \param url the url file to query
+     * \param parser a fulltext parser. if not set the fulltext will be empty.
+     * \return a vector of articles without fulltext
+     * \throws std::runtime_error if url is not a known url for parser.
+     */
+    std::vector<Article> parse(const std::string& url, std::optional<ParserFulltext*> parser);
 
     namespace
     {
