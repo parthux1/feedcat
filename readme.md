@@ -14,6 +14,11 @@ Categorize RSS feeds.
 |------------------------------------------------------| --- |
 | [SQLiteCpp](https://github.com/SRombauts/SQLiteCpp/) | sqlite3 |
 
+## Utility Requirements
+| Script                                              | req. package |
+| ------------------------------------------------------| --- |
+| [dependency-graph](https://github.com/pvigier/dependency-graph)                               | graphviz |
+
 
 ## TODOs
 - [ ] adaptive poll rate for known sources
