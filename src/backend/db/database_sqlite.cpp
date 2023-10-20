@@ -19,7 +19,7 @@ DatabaseSqlLite::DatabaseSqlLite(std::string db_name)
         db = std::make_unique<SQLite::Database>(SQLite::Database{db_name.data(), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE});
         SPDLOG_DEBUG("{} opened.", db_name);
 
-        const std::string create_table_article = "CREATE TABLE IF NOT EXISTS article(id INTEGER PRIMARY KEY ASC, url, title, description, fulltext, date)";
+        const std::string create_table_article = "CREATE TABLE IF NOT EXISTS article(id INTEGER PRIMARY KEY ASC, url, title, description, fulltext, date, rss_source)";
         const bool success = db->tryExec(create_table_article);
 
         if(success) SPDLOG_DEBUG("Created article-table.");
@@ -51,7 +51,8 @@ std::optional<RSS::Article> DatabaseSqlLite::get_article(std::string url) const
             query.getColumn("title"),
             query.getColumn("description"),
             fulltext,
-            query.getColumn("date")
+            query.getColumn("date"),
+            query.getColumn("rss_source")
     };
 
     // we only expect one result
@@ -75,7 +76,7 @@ std::size_t DatabaseSqlLite::count_articles() const
 
 bool DatabaseSqlLite::store_article(const RSS::Article &article)
 {
-    SQLite::Statement query(*db, "INSERT INTO article VALUES (?, ?, ?, ?, ?, ?)");
+    SQLite::Statement query(*db, "INSERT INTO article VALUES (?, ?, ?, ?, ?, ?, ?)");
     query.bind(1); // id autoincrement
     query.bind(2, article.url);
     query.bind(3, article.title);
@@ -85,6 +86,7 @@ bool DatabaseSqlLite::store_article(const RSS::Article &article)
     else query.bind(5);
 
     query.bind(6, article.date);
+    query.bind(7, article.rss_source);
 
     try
     {
@@ -136,7 +138,7 @@ std::size_t DatabaseSqlLite::update_article_impl(const std::string& url_old, con
 
     // update all
     SQLite::Transaction t{*db};
-    SQLite::Statement query(*db, "UPDATE article SET url=?, title=?, description=?, fulltext=?, date=? WHERE url=?");
+    SQLite::Statement query(*db, "UPDATE article SET url=?, title=?, description=?, fulltext=?, date=?, rss_source=? WHERE url=?");
     const std::string fulltext = article_new.fulltext.has_value() ? article_new.fulltext.value() : "";
 
     query.bind(1, article_new.url);
@@ -144,7 +146,8 @@ std::size_t DatabaseSqlLite::update_article_impl(const std::string& url_old, con
     query.bind(3, article_new.title);
     query.bind(4, article_new.description);
     query.bind(5, fulltext);
-    query.bind(6, url_old);
+    query.bind(6, article_new.rss_source);
+    query.bind(7, url_old);
 
     query.exec();
     t.commit();

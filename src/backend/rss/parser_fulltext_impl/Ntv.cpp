@@ -55,3 +55,11 @@ std::optional<std::string> RSS::ProviderNTV::get_fulltext_impl(const std::string
 
     return fulltext;
 }
+
+std::vector<std::string> RSS::ProviderNTV::get_known_urls_impl() const
+{
+    return {
+        "https://www.n-tv.de/wirtschaft/rss",
+        "https://www.n-tv.de/politik/rss",
+    };
+}

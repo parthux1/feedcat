@@ -49,8 +49,18 @@ namespace RSS {
             return true;
         }
 
+        /*!
+         * \returns list of known urls which can be resolved by this parser
+         */
+        std::vector<std::string> get_known_urls() const
+        {
+            return get_known_urls_impl();
+        }
+
     protected:
         virtual std::optional<std::string> get_fulltext_impl(const std::string& url) = 0;
+
+        virtual std::vector<std::string> get_known_urls_impl() const = 0;
     };
 
 }

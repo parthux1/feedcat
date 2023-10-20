@@ -21,6 +21,7 @@ namespace RSS {
         std::string description;
         std::optional<std::string> fulltext = {};
         std::string date;
+        std::string rss_source;
     };
 
 }

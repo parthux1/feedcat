@@ -6,11 +6,23 @@
 
 using namespace RSS;
 
-XML::ParserRSS::ParserRSS(bool exit_on_failure)
+// Static leaked function
+std::vector<Article> XML::parse(const std::string &xml, const std::optional<std::string>& rss_source) {
+    tinyxml2::XMLDocument doc;
+    doc.Parse(xml.c_str());
+
+    ParserRSS parser{false, rss_source};
+    doc.Accept(&parser);
+    return parser.get_articles();
+}
+
+// internal parser implementation
+
+XML::ParserRSS::ParserRSS(bool exit_on_failure, const std::optional<std::string>& rss_source)
     : XMLVisitor(),
       exit_on_failure(exit_on_failure)
 {
-
+    if(rss_source.has_value()) this->rss_source = rss_source.value();
 }
 
 bool XML::ParserRSS::VisitEnter(const tinyxml2::XMLElement& element, const tinyxml2::XMLAttribute* firstAttribute)
@@ -54,7 +66,7 @@ std::optional<Article> XML::ParserRSS::get_article(const tinyxml2::XMLElement &e
 
         target_location = xml_node->GetText();
     }
-
+    article.rss_source = rss_source;
     return article;
 }
 
@@ -62,13 +74,4 @@ const std::vector<Article>& XML::ParserRSS::get_articles() const noexcept
 {
     if(skips > 0) SPDLOG_WARN("While parsing {} articles where skipped.", skips);
     return articles;
-}
-
-std::vector<Article> XML::parse(const std::string &xml) {
-    tinyxml2::XMLDocument doc;
-    doc.Parse(xml.c_str());
-
-    ParserRSS parser;
-    doc.Accept(&parser);
-    return parser.get_articles();
 }
