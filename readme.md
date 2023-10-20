@@ -7,7 +7,7 @@ Categorize RSS feeds.
 
 
 ## implemented fulltext providers
-- [n-tv](https://www.n-tv.de/software/RSS-Feeds-article6210.html)
+- [n-tv](https://www.n-tv.de/incoming/RSS-Feeds-von-n-tv-de-article10735026.html)
 
 ## Requirements
 | package                                              | req. package |
