@@ -7,6 +7,9 @@ Categorize RSS feeds.
 
 
 ## implemented fulltext providers
+> **Legal Disclaimer**  
+> Depending on your usecase copying, storing and publishing copyrighted material might be illegal. If you use this tool 
+> I expect you're allowed to do so. I'm not responsible for any illegal use of this tool.
 - [n-tv](https://www.n-tv.de/incoming/RSS-Feeds-von-n-tv-de-article10735026.html)
 
 ## Requirements
