@@ -16,7 +16,7 @@ std::vector<Article> XML::parse(const std::string &xml, const std::optional<std:
     return parser.get_articles();
 }
 
-std::vector<Article> XML::parse(const std::string& url, std::optional<ParserFulltext*> parser)
+std::vector<Article> XML::query_and_parse(const std::string& url, std::optional<ParserFulltext*> parser)
 {
     if(parser.has_value())
     {
