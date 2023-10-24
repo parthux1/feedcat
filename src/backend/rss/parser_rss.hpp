@@ -29,6 +29,7 @@ namespace RSS::XML
      * \param parser a fulltext parser. if not set the fulltext will be empty.
      * \return a vector of articles without fulltext
      * \throws std::runtime_error if url is not a known url for parser.
+     * \note If performance matters execute the fulltext queries manually for interesting articles.
      */
     std::vector<Article> parse(const std::string& url, std::optional<ParserFulltext*> parser);
 
