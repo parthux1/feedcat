@@ -21,8 +21,3 @@ Categorize RSS feeds.
 | Script                                              | req. package |
 | ------------------------------------------------------| --- |
 | [dependency-graph](https://github.com/pvigier/dependency-graph)                               | graphviz |
-
-
-## TODOs
-- [ ] adaptive poll rate for known sources
-- [ ] wrapper class for RSS urls allowing querying groups of urls
