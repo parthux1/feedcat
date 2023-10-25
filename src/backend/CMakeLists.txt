@@ -8,9 +8,9 @@ add_library(feedcat_backend
         article.hpp
         rss/parser_rss.hpp
         rss/parser_rss.cpp
-        rss/parser_fulltext.hpp
-        rss/parser_fulltext_impl/Ntv.hpp
-        rss/parser_fulltext_impl/Ntv.cpp
+        rss/ProviderInterface.hpp
+        rss/provider_implementation/Ntv.hpp
+        rss/provider_implementation/Ntv.cpp
         helper/helper_tinyxml2.hpp
         helper/helper_tinyxml2.cpp
 )

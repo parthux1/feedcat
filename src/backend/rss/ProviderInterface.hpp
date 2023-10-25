@@ -11,24 +11,18 @@
 
 #include <article.hpp>
 
-/* To implement a fulltext parser
- * a) inherit from ParserFullText - NV Interface
- * b) implement _impl functions
-*/
-
-
 namespace RSS {
 
-    class ParserFulltext
+    class ProviderInterface
     {
     public:
-        virtual ~ParserFulltext() = default;
+        virtual ~ProviderInterface() = default;
 
         /*!
          * \brief get fulltext from an url
          * \param url query fulltext from this url
          */
-        std::optional<std::string> get_fulltext(const std::string& url)
+        std::optional<std::string> get_fulltext(const std::string& url) // currently no reason to use NVI here
         {
             return get_fulltext_impl(url);
         }
@@ -42,7 +36,6 @@ namespace RSS {
             const auto fulltext = get_fulltext_impl(article.url);
             if(!fulltext.has_value())
             {
-                SPDLOG_WARN("Couldn't get fulltext for article {}", article.url);
                 return false;
             }
             article.fulltext = fulltext;
@@ -52,15 +45,14 @@ namespace RSS {
         /*!
          * \returns list of known urls which can be resolved by this parser
          */
-        std::vector<std::string> get_known_urls() const
-        {
-            return get_known_urls_impl();
-        }
+        virtual std::vector<std::string> get_known_urls() const = 0;
 
     protected:
-        virtual std::optional<std::string> get_fulltext_impl(const std::string& url) = 0;
-
-        virtual std::vector<std::string> get_known_urls_impl() const = 0;
+        virtual std::optional<std::string> get_fulltext_impl(const std::string& url)
+        {
+            SPDLOG_INFO("This Provider doesn't supply a function for resolving article contents. URL: {}.", url);
+            return std::nullopt;
+        };
     };
 
 }

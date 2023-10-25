@@ -11,7 +11,7 @@
 #include <cpr/cpr.h>
 
 #include <article.hpp>
-#include <rss/parser_fulltext.hpp>
+#include <rss/ProviderInterface.hpp>
 
 namespace RSS::XML
 {
@@ -31,7 +31,7 @@ namespace RSS::XML
      * \throws std::runtime_error if url is not a known url for parser.
      * \note If performance matters execute the fulltext queries manually for interesting articles.
      */
-    std::vector<Article> query_and_parse(const std::string& url, std::optional<ParserFulltext*> parser = std::nullopt);
+    std::vector<Article> query_and_parse(const std::string& url, std::optional<ProviderInterface*> parser = std::nullopt);
 
     namespace
     {
