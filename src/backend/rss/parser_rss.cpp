@@ -16,11 +16,12 @@ std::vector<Article> XML::parse(const std::string &xml, const std::optional<std:
     return parser.get_articles();
 }
 
-std::vector<Article> XML::query_and_parse(const std::string& url, std::optional<ProviderInterface*> parser)
+std::vector<Article> XML::query_and_parse(const std::string& url, const std::unique_ptr<ProviderInterface>& parser)
 {
-    if(parser.has_value())
+    const bool parser_exists = nullptr != parser;
+    if(parser_exists)
     {
-        const auto known_urls = parser.value()->get_known_urls();
+        const auto known_urls = parser->get_known_urls();
         const bool exists = std::find(known_urls.begin(), known_urls.end(), url) != known_urls.end();
         if(!exists) throw std::runtime_error("URL is not supported by the given parser.");
     }
@@ -28,12 +29,12 @@ std::vector<Article> XML::query_and_parse(const std::string& url, std::optional<
     cpr::Response r = cpr::Get(cpr::Url{url});
     auto res = XML::parse(r.text, url);
 
-    if(!parser.has_value()) return res;
+    if(!parser_exists) return res;
 
     // Get fulltext
     for(auto& a : res)
     {
-        if(!parser.value()->get_fulltext(a))
+        if(!parser->get_fulltext(a))
         {
             SPDLOG_WARN("failed to fetch fulltext of URL: {}", a.url);
         }
