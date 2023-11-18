@@ -3,8 +3,7 @@
 //
 #include "Ntv.hpp"
 
-std::optional<std::string> RSS::ProviderNTV::get_fulltext_impl(const std::string& url)
-{
+std::optional<std::string> RSS::Ntv::get_fulltext(const std::string& url) const {
 
     const auto article = cpr::Get(cpr::Url{url});
     if(article.status_code != 200)
@@ -54,12 +53,4 @@ std::optional<std::string> RSS::ProviderNTV::get_fulltext_impl(const std::string
     }
 
     return fulltext;
-}
-
-std::vector<std::string> RSS::ProviderNTV::get_known_urls() const
-{
-    return {
-        "https://www.n-tv.de/wirtschaft/rss",
-        "https://www.n-tv.de/politik/rss",
-    };
 }

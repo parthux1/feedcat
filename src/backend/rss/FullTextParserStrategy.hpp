@@ -8,6 +8,11 @@
 
 namespace RSS
 {
+
+    /* TODO: If this class has no other use than the get_fulltext method, make a FullTextParserStrategy initializable via function pointer.
+     * Currently the class provides no constraint
+     */
+
     class FullTextParserStrategy
     {
     public:

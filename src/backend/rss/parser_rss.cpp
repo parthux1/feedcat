@@ -7,52 +7,30 @@
 using namespace RSS;
 
 // Static leaked function
-std::vector<Article> XML::parse(const std::string &xml, const std::optional<std::string>& rss_source) {
+std::vector<Article> Parser::parse(RSS::Url& url) {
     tinyxml2::XMLDocument doc;
-    doc.Parse(xml.c_str());
+    doc.Parse(url.url.c_str());
 
-    ParserRSS parser{false, rss_source};
+    RSSVisitor parser{url, false};
     doc.Accept(&parser);
-    return parser.get_articles();
-}
 
-std::vector<Article> XML::query_and_parse(const std::string& url, const std::unique_ptr<ProviderInterface>& parser)
-{
-    const bool parser_exists = nullptr != parser;
-    if(parser_exists)
-    {
-        const auto known_urls = parser->get_known_urls();
-        const bool exists = std::find(known_urls.begin(), known_urls.end(), url) != known_urls.end();
-        if(!exists) throw std::runtime_error("URL is not supported by the given parser.");
-    }
+    const auto articles = parser.get_articles();
 
-    cpr::Response r = cpr::Get(cpr::Url{url});
-    auto res = XML::parse(r.text, url);
+    const auto now = std::chrono::system_clock::now();
+    url.last_update = std::chrono::system_clock::to_time_t(now);
 
-    if(!parser_exists) return res;
-
-    // Get fulltext
-    for(auto& a : res)
-    {
-        if(!parser->get_fulltext(a))
-        {
-            SPDLOG_WARN("failed to fetch fulltext of URL: {}", a.url);
-        }
-    }
-
-    return res;
+    return articles;
 }
 
 // internal parser implementation
-
-XML::ParserRSS::ParserRSS(bool exit_on_failure, const std::optional<std::string>& rss_source)
+Parser::RSSVisitor::RSSVisitor(const RSS::Url& url, bool exit_on_failure)
     : XMLVisitor(),
-      exit_on_failure(exit_on_failure)
+      exit_on_failure(exit_on_failure),
+      url(url)
 {
-    if(rss_source.has_value()) this->rss_source = rss_source.value();
 }
 
-bool XML::ParserRSS::VisitEnter(const tinyxml2::XMLElement& element, const tinyxml2::XMLAttribute* firstAttribute)
+bool Parser::RSSVisitor::VisitEnter(const tinyxml2::XMLElement& element, const tinyxml2::XMLAttribute* firstAttribute)
 {
     // RSS 2.0 can be parsed like this
     if(element.Name() == std::string("item")) // cast needed
@@ -70,7 +48,7 @@ bool XML::ParserRSS::VisitEnter(const tinyxml2::XMLElement& element, const tinyx
     return true;
 }
 
-std::optional<Article> XML::ParserRSS::get_article(const tinyxml2::XMLElement &element) noexcept
+std::optional<Article> Parser::RSSVisitor::get_article(const tinyxml2::XMLElement &element) noexcept
 {
     Article article;
 
@@ -93,11 +71,11 @@ std::optional<Article> XML::ParserRSS::get_article(const tinyxml2::XMLElement &e
 
         target_location = xml_node->GetText();
     }
-    article.rss_source = rss_source;
+    article.rss_source = url.url;
     return article;
 }
 
-const std::vector<Article>& XML::ParserRSS::get_articles() const noexcept
+const std::vector<Article>& Parser::RSSVisitor::get_articles() const noexcept
 {
     if(skips > 0) SPDLOG_WARN("While parsing {} articles where skipped.", skips);
     return articles;
