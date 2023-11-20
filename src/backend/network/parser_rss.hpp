@@ -20,7 +20,7 @@ namespace RSS::Parser
      * \param url URL to get RSS feed from
      * \return a vector of articles
      */
-    std::vector<Article> parse(RSS::Url& url);
+    std::vector<Article> parse(const std::string& url);
 
     namespace
     {
@@ -35,7 +35,7 @@ namespace RSS::Parser
              * \param url URL to get RSS feed from
              * \param exit_on_failure if true exists if an article can't be parsed, otherwise skips the article.
              */
-            RSSVisitor(const RSS::Url& url, bool exit_on_failure = false);
+            RSSVisitor(std::string  url, bool exit_on_failure = false);
 
             bool VisitEnter(const tinyxml2::XMLElement &, const tinyxml2::XMLAttribute *) override;
 
@@ -47,7 +47,7 @@ namespace RSS::Parser
             // Members
         private:
             bool exit_on_failure;
-            const RSS::Url& url;
+            const std::string url;
             unsigned int skips = 0;
             std::vector<Article> articles;
         };

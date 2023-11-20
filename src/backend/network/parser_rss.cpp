@@ -4,29 +4,28 @@
 
 #include "parser_rss.hpp"
 
+#include <utility>
+
 using namespace RSS;
 
 // Static leaked function
-std::vector<Article> Parser::parse(RSS::Url& url) {
+std::vector<Article> Parser::parse(const std::string& url) {
     tinyxml2::XMLDocument doc;
-    doc.Parse(url.url.c_str());
+    doc.Parse(url.c_str());
 
     RSSVisitor parser{url, false};
     doc.Accept(&parser);
 
     const auto articles = parser.get_articles();
 
-    const auto now = std::chrono::system_clock::now();
-    url.last_update = std::chrono::system_clock::to_time_t(now);
-
     return articles;
 }
 
 // internal parser implementation
-Parser::RSSVisitor::RSSVisitor(const RSS::Url& url, bool exit_on_failure)
+Parser::RSSVisitor::RSSVisitor(std::string  url, bool exit_on_failure)
     : XMLVisitor(),
       exit_on_failure(exit_on_failure),
-      url(url)
+      url(std::move(url))
 {
 }
 
@@ -71,7 +70,7 @@ std::optional<Article> Parser::RSSVisitor::get_article(const tinyxml2::XMLElemen
 
         target_location = xml_node->GetText();
     }
-    article.rss_source = url.url;
+    article.rss_source = url;
     return article;
 }
 

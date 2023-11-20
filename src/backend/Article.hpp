@@ -3,9 +3,19 @@
 //
 #pragma once
 
-#include <string>
-#include <optional>
+#include <memory>
+#include <unordered_map>
 
+#include <ArticlePropertyInterface.hpp>
+
+
+class Article
+{
+public:
+    std::unordered_map<std::string, std::unique_ptr<ArticlePropertyInterface>> properties{};
+};
+
+/*
 namespace RSS {
 
     class Article {
@@ -16,12 +26,15 @@ namespace RSS {
 
         // Members
     public:
-        std::string url;
+        StringProperty url{"url"};
         std::string title;
         std::string description;
         std::optional<std::string> fulltext = {};
         std::string date;
         std::string rss_source;
-    };
 
+        // how to have optional & Nonoptional properties?
+        std::vector<std::unique_ptr<ArticlePropertyInterface>> extensions = {};
+    };
 }
+*/

@@ -5,20 +5,24 @@
 
 #include <string>
 #include <chrono>
+#include <list>
+#include <ArticlePropertyInterface.hpp>
+
 
 namespace RSS
 {
-    class Url
+    class Feed
     {
     public:
         /*!
          * \param url URL of a single RSS feed
          */
-        Url(const std::string& url);
+        Feed(const std::string& url);
 
     // Members
     public:
         std::string url;
         std::time_t last_update = -1; // invalid point in time
+        std::list<ExtendedArticle> articles = {};
     };
 }

@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-#include <rss/url.hpp>
+#include "Feed.hpp"
 #include <rss/FullTextParserStrategy.hpp>
 #include <rss/parser_rss.hpp>
 
