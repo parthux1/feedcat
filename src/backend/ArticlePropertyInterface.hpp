@@ -1,9 +1,9 @@
 //
 // Created by parthu on 11/18/23.
 //
-
 #pragma once
 
+#include <memory>
 #include <db/database_interface.hpp>
 
 class ArticlePropertyInterface

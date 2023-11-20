@@ -2,27 +2,32 @@
 // Created by parthu on 11/18/23.
 //
 
-#include <rss/Provider.hpp>
+#include <Provider.hpp>
 
-RSS::Provider::Provider(const std::vector<RSS::Url>& urls)
-    : urls(urls)
+Provider::Provider(const std::vector<Feed>& feeds)
+    : feeds(feeds)
 {
 }
 
-RSS::Provider::Provider(const std::vector<RSS::Url>& urls, std::shared_ptr<FullTextParserStrategy> strategy)
-    : urls(urls),
+Provider::Provider(const std::vector<Feed>& feeds, std::shared_ptr<FullTextParserStrategy> strategy)
+    : feeds(feeds),
       fulltext_strategy(strategy)
 {
 }
 
-RSS::Provider& RSS::Provider::set_fulltext_strategy(std::shared_ptr<FullTextParserStrategy> strategy)
+Provider& Provider::set_fulltext_strategy(std::shared_ptr<FullTextParserStrategy>& strategy)
 {
     fulltext_strategy = strategy;
     return *this;
 }
 
-RSS::Provider& RSS::Provider::set_urls(std::vector<RSS::Url>& new_urls)
+Provider& Provider::set_feeds(std::vector<Feed>& new_feeds)
 {
-    this->urls = new_urls;
+    feeds.clear();
+    for(auto& feed : new_feeds)
+    {
+        feeds.push_back(feed);
+    }
+
     return *this;
 }

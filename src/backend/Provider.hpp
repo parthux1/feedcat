@@ -4,31 +4,22 @@
 #include <vector>
 #include <memory>
 
-#include "Feed.hpp"
-#include <rss/FullTextParserStrategy.hpp>
-#include <rss/parser_rss.hpp>
+#include <Feed.hpp>
+#include <network/FullTextParserStrategy.hpp>
+#include <network/parser_rss.hpp>
 
-namespace RSS {
+class Provider
+{
+public:
+    Provider(const std::vector<Feed>& feeds);
+    Provider(const std::vector<Feed>& feeds, std::shared_ptr<FullTextParserStrategy> strategy);
 
-    class Provider
-    {
-        // Constructors & Destructors
-    public:
-        ~Provider() = default;
+public:
+    Provider& set_fulltext_strategy(std::shared_ptr<FullTextParserStrategy>& strategy);
+    Provider& set_feeds(std::vector<Feed>& feeds);
 
-        Provider() = default;
-        Provider(const std::vector<RSS::Url>& urls);
-        Provider(const std::vector<RSS::Url>& urls, std::shared_ptr<FullTextParserStrategy> strategy);
-
-        // Functions
-    public:
-        Provider& set_fulltext_strategy(std::shared_ptr<FullTextParserStrategy> strategy);
-        Provider& set_urls(std::vector<RSS::Url>& urls);
-
-        // Members
-    public:
-        std::vector<RSS::Url> urls = {};
-    private:
-        std::optional<std::shared_ptr<FullTextParserStrategy>> fulltext_strategy = std::nullopt;
-    };
-}
+public:
+    std::vector<Feed> feeds = {};
+private:
+    std::optional<std::shared_ptr<FullTextParserStrategy>> fulltext_strategy = std::nullopt;
+};

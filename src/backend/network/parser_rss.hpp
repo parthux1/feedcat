@@ -11,7 +11,6 @@
 #include <cpr/cpr.h>
 
 #include <Article.hpp>
-#include <rss/Provider.hpp>
 
 namespace RSS::Parser
 {
@@ -32,10 +31,10 @@ namespace RSS::Parser
         {
         public:
             /*!
-             * \param url URL to get RSS feed from
+             * \param text_url URL the RSS feed was fetched from
              * \param exit_on_failure if true exists if an article can't be parsed, otherwise skips the article.
              */
-            RSSVisitor(std::string  url, bool exit_on_failure = false);
+            RSSVisitor(std::string url, bool exit_on_failure = false);
 
             bool VisitEnter(const tinyxml2::XMLElement &, const tinyxml2::XMLAttribute *) override;
 
@@ -47,7 +46,7 @@ namespace RSS::Parser
             // Members
         private:
             bool exit_on_failure;
-            const std::string url;
+            const std::string url; // TODO: this is only used for constructing the articles. Move it. SRP..
             unsigned int skips = 0;
             std::vector<Article> articles;
         };

@@ -21,6 +21,10 @@ public:
      */
     explicit Article(ArticleBaseProperty base_property);
 
+    Article(const Article& other);
+
+
+    Article& operator=(const Article& other) = default;
 
     // Property Management
 
@@ -44,20 +48,41 @@ public:
     std::optional<ArticlePropertyInterface*> get(const ArticlePropertyHash& hash);
 
     /*!
+    * \brief Get a property by its hash.
+    * @param hash property to get
+    * @return non-owning property-pointer if it exists, otherwise std::nullopt
+    */
+    std::optional<const ArticlePropertyInterface*> get(const ArticlePropertyHash& hash) const;
+
+    /*!
      * \brief Get a dynamic_pointer_casted property by its hash. Requires information about properties at compile time.
      * @tparam T property to get
      * @return non-owning property-pointer if it exists, otherwise std::nullopt
      */
     template<typename T>
         requires std::derived_from<T, ArticlePropertyInterface>
-    std::optional<T> get()
+    std::optional<T*> get()
     {
         const auto hash = ArticlePropertyHash::create<T>();
         if(!has_property(hash)) return std::nullopt;
 
-        return std::dynamic_pointer_cast<T>(properties.at(hash).get());
+        return dynamic_cast<T*>(properties.at(hash).get());
     }
 
+    /*!
+     * \brief Get a dynamic_pointer_casted property by its hash. Requires information about properties at compile time.
+     * @tparam T property to get
+     * @return non-owning property-pointer if it exists, otherwise std::nullopt
+     */
+    template<typename T>
+    requires std::derived_from<T, ArticlePropertyInterface>
+    std::optional<const T*> get() const
+    {
+        const auto hash = ArticlePropertyHash::create<T>();
+        if(!has_property(hash)) return std::nullopt;
+
+        return dynamic_cast<const T*>(properties.at(hash).get());
+    }
 
 public:
     std::unordered_map<ArticlePropertyHash, std::unique_ptr<ArticlePropertyInterface>> properties{};

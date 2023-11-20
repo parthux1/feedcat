@@ -22,7 +22,6 @@ private:
      * \brief Use ArticlePropertyHash::create<T>()
      */
     ArticlePropertyHash(std::size_t value);
-
 public:
     explicit ArticlePropertyHash(const ArticlePropertyInterface* property);
 

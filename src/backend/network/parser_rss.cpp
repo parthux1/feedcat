@@ -10,8 +10,11 @@ using namespace RSS;
 
 // Static leaked function
 std::vector<Article> Parser::parse(const std::string& url) {
+
+    cpr::Response r = cpr::Get(cpr::Url{url});
+
     tinyxml2::XMLDocument doc;
-    doc.Parse(url.c_str());
+    doc.Parse(r.text.c_str());
 
     RSSVisitor parser{url, false};
     doc.Accept(&parser);
@@ -22,7 +25,7 @@ std::vector<Article> Parser::parse(const std::string& url) {
 }
 
 // internal parser implementation
-Parser::RSSVisitor::RSSVisitor(std::string  url, bool exit_on_failure)
+Parser::RSSVisitor::RSSVisitor(std::string url, bool exit_on_failure)
     : XMLVisitor(),
       exit_on_failure(exit_on_failure),
       url(std::move(url))
@@ -49,13 +52,16 @@ bool Parser::RSSVisitor::VisitEnter(const tinyxml2::XMLElement& element, const t
 
 std::optional<Article> Parser::RSSVisitor::get_article(const tinyxml2::XMLElement &element) noexcept
 {
-    Article article;
 
+
+    std::string article_title, article_url, article_description, article_date;
+
+    // XML Tags we want to extract
     const static std::unordered_map<std::string, std::string&> tags = {
-        {"title", article.title},
-        {"link", article.url},
-        {"description", article.description},
-        {"pubDate", article.date}
+        {"title", article_title},
+        {"link", article_url},
+        {"description", article_description},
+        {"pubDate", article_date}
     };
 
     for(const auto&[tag, target_location] : tags)
@@ -70,8 +76,11 @@ std::optional<Article> Parser::RSSVisitor::get_article(const tinyxml2::XMLElemen
 
         target_location = xml_node->GetText();
     }
-    article.rss_source = url;
-    return article;
+
+    ArticleBaseProperty article_base{article_title, article_url, url, article_date};
+    article_base.set_description(article_description);
+
+    return Article{article_base};
 }
 
 const std::vector<Article>& Parser::RSSVisitor::get_articles() const noexcept
