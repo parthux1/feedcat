@@ -2,21 +2,31 @@
 // Created by parthu on 8/29/23.
 //
 
-#include "article.hpp"
+#include "Article.hpp"
 
-using namespace RSS;
-
-
-bool Article::operator==(const Article& other) const
+Article::Article(ArticleBaseProperty base_property)
 {
-    return url == other.url
-            && title == other.title
-            && description == other.description
-            && date == other.date
-            && rss_source == other.rss_source;
+    // TODO: check if base_property is valid
+
+    ArticlePropertyHash hash{&base_property};
+    properties[hash] = std::make_unique<ArticleBaseProperty>(std::move(base_property));
 }
 
-std::string Article::to_string() const
+Article& Article::add_property(std::unique_ptr<ArticlePropertyInterface> property)
 {
-    return "Title: " + title + "\nDate: " + date + "\nURL: " + url + "\nRSS-Source:" + rss_source + "\nDescription:\n" + description;
+    ArticlePropertyHash hash{property.get()};
+    properties[hash] = std::move(property);
+    return *this;
+}
+
+bool Article::has_property(const ArticlePropertyHash& hash) const
+{
+    return properties.contains(hash);
+}
+
+std::optional<ArticlePropertyInterface*> Article::get(const ArticlePropertyHash& hash)
+{
+    if(!has_property(hash)) return std::nullopt;
+
+    return properties.at(hash).get();
 }

@@ -4,6 +4,12 @@
 
 #pragma once
 
-class ArticleExtensionInterface
+#include <db/database_interface.hpp>
+
+class ArticlePropertyInterface
 {
+public:
+    virtual bool store(DatabaseInterface* db) const = 0;
+
+    virtual bool load(const DatabaseInterface* db) = 0;
 };
