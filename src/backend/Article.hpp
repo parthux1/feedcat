@@ -55,7 +55,7 @@ public:
     std::optional<const ArticlePropertyInterface*> get(const ArticlePropertyHash& hash) const;
 
     /*!
-     * \brief Get a dynamic_pointer_casted property by its hash. Requires information about properties at compile time.
+     * \brief Get a dynamic-casted property by its hash. Requires information about properties at compile time.
      * @tparam T property to get
      * @return non-owning property-pointer if it exists, otherwise std::nullopt
      */
@@ -70,7 +70,7 @@ public:
     }
 
     /*!
-     * \brief Get a dynamic_pointer_casted property by its hash. Requires information about properties at compile time.
+     * \brief Get a dynamic-casted property by its hash. Requires information about properties at compile time.
      * @tparam T property to get
      * @return non-owning property-pointer if it exists, otherwise std::nullopt
      */
