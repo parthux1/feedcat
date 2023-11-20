@@ -6,23 +6,21 @@
 #include <string>
 #include <chrono>
 #include <list>
-#include <ArticlePropertyInterface.hpp>
 
+#include <Article.hpp>
 
-namespace RSS
+class Feed
 {
-    class Feed
-    {
-    public:
-        /*!
-         * \param url URL of a single RSS feed
-         */
-        Feed(const std::string& url);
+public:
+    /*!
+     * \param url URL of a single RSS feed
+     */
+    Feed(const std::string& url);
 
-    // Members
-    public:
-        std::string url;
-        std::time_t last_update = -1; // invalid point in time
-        std::list<ExtendedArticle> articles = {};
-    };
-}
+// Members
+public:
+    std::string url;
+    std::time_t last_update = -1; // invalid point in time
+
+    std::list<Article> articles = {};
+};

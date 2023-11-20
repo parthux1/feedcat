@@ -10,7 +10,7 @@
 #include <spdlog/spdlog.h>
 #include <cpr/cpr.h>
 
-#include <article.hpp>
+#include <Article.hpp>
 #include <rss/Provider.hpp>
 
 namespace RSS::Parser
