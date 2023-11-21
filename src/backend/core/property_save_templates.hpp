@@ -5,7 +5,6 @@
 #include <concepts>
 #include <optional>
 #include <db/database_interface.hpp>
-#include <ArticlePropertyHash.hpp>
 #include <ArticlePropertyInterface.hpp>
 
 /*
