@@ -21,3 +21,15 @@ Categorize RSS feeds.
 | Script                                              | req. package |
 | ------------------------------------------------------| --- |
 | [dependency-graph](https://github.com/pvigier/dependency-graph)                               | graphviz |
+
+
+## Variation points
+You can extend this project with the following variation points:
+
+| What               | Description                                     | How                                              |
+|--------------------|-------------------------------------------------|--------------------------------------------------|
+| Fulltext-Parser    | Parse article texts from your custom providers. | See `backend/network/FullTextParserStrategy.hpp` |
+| Article Properties | Store custom values in Articles.                | See `backend/ArticlePropertyInterface.hpp`       |                                          |
+| DB-Interaction for custom Properties | Store custom values in a database. | See `backend/property_save_templates.hpp`        |              
+| DB-Endpoints | Use your own database.                          | See `backend/db/database_interface.hpp`          |
+
