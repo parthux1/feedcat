@@ -4,14 +4,18 @@
 #pragma once
 
 #include <memory>
-#include <db/database_interface.hpp>
 
+/*!
+ * This class is used for virtual table generation for all ArticleProperties and for constrains throughout the code.
+ * A derived class can be stored in an article
+ * A derived class specializing/overloading templates in property_save_templates can be stored and retrieved from a database.
+ *
+ * \see Article.hpp
+ * \see property_save_templates.hpp
+ */
 class ArticlePropertyInterface
 {
 public:
-    virtual bool store(DatabaseInterface* db) const = 0;
-
-    virtual bool load(const DatabaseInterface* db) = 0;
 
     [[nodiscard]] virtual std::unique_ptr<ArticlePropertyInterface> copy() const = 0;
 
