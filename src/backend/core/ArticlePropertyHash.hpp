@@ -11,7 +11,8 @@
 /*!
  * \brief This class constrains typeid hashes to be from a class derived from ArticlePropertyInterface
  * \note Hash is distinct for each derived class, not for each instance of the same class.
- * \note Because the hash can be created via class-template or instance when updating the hash definition one must update both constructors
+ * \note typeid differs for T* and T.
+ * \note Because the hash can be created via class-template or instance when updating the hash definition one must update both constructors.
  * \see ArticlePropertyInterface
  */
 
@@ -23,7 +24,12 @@ private:
      */
     ArticlePropertyHash(std::size_t value);
 public:
-    explicit ArticlePropertyHash(const ArticlePropertyInterface* property);
+    template<typename T>
+    requires std::derived_from<T, ArticlePropertyInterface>
+    explicit ArticlePropertyHash(const T* property)
+    {
+        value = typeid(T).hash_code();
+    }
 
     ~ArticlePropertyHash() = default;
 

@@ -10,11 +10,6 @@ ArticlePropertyHash::ArticlePropertyHash(std::size_t value)
 
 }
 
-ArticlePropertyHash::ArticlePropertyHash(const ArticlePropertyInterface* property)
-{
-    value = typeid(property).hash_code();
-}
-
 bool ArticlePropertyHash::operator==(const ArticlePropertyHash &other) const
 {
     return value == other.value;
