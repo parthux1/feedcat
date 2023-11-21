@@ -45,10 +45,6 @@ public:
 
     // derived functions
 public:
-    bool store(DatabaseInterface *db) const override;
-
-    bool load(const DatabaseInterface *db) override;
-
     std::unique_ptr<ArticlePropertyInterface> copy() const override;
 
 public:
@@ -59,7 +55,7 @@ public:
     std::string rss_url;
     std::string title;
 
-
+    // TODO: move these to custom properties
     std::optional<std::time_t> date;
     std::optional<std::string> fulltext = {};
 

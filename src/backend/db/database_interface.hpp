@@ -3,8 +3,17 @@
 //
 #pragma once
 
-#include<backend/article.hpp>
+#include <string>
+#include <optional>
 
+// must be very basic, Properties define how to store and load themselves
+class DatabaseInterface
+{
+};
+
+// old DB-Interface directly working on articles
+
+#if false
 class DatabaseInterface
 {
     // NVI functions
@@ -16,7 +25,7 @@ public:
      * @param article_new new content to store.
      * @returns amount of updated entries.
      */
-    std::size_t update_article(const RSS::Article& article_new);
+    std::size_t update_article(const Article& article_new);
 
     /*!
      * Overrides an existing article with this content. URL will be updated to!
@@ -24,7 +33,7 @@ public:
      * @param article_new new content to store.
      * @returns amount of updated entries.
      */
-    std::size_t update_article(const std::string& url_old, const RSS::Article& article_new);
+    std::size_t update_article(const std::string& url_old, const Article& article_new);
 
     /*!
      * Checks if an article exists in the database via comparing the url.
@@ -32,7 +41,7 @@ public:
      * @return true if an entry with the given URL exists.
      * @throws if article_exists(std::string) throws.
      */
-    bool article_exists(const RSS::Article& article) const;
+    bool article_exists(const Article& article) const;
 
     /*!
      * Checks if an article exists in the database via comparing the url.
@@ -50,7 +59,7 @@ protected:
      * @param article_new new content to store.
      * @returns amount of updated entries.
      */
-    virtual std::size_t update_article_impl(const std::string& url_old, const RSS::Article& article_new) = 0;
+    virtual std::size_t update_article_impl(const std::string& url_old, const Article& article_new) = 0;
 
     /*!
      * Checks if an article exists in the database via comparing the url.
@@ -67,17 +76,19 @@ public:
      * @param article
      * @return true if successful
      */
-    virtual bool store_article(const RSS::Article& article) = 0;
+    virtual bool store_article(const Article& article) = 0;
 
     /*!
      * Get an article by URL
      * @param url URL to get
      * @return RSS:Article if the url exists in the database.
      */
-    virtual std::optional<RSS::Article> get_article(std::string url) const = 0;
+    virtual std::optional<Article> get_article(std::string url) const = 0;
 
     /*!
      * @returns amount of entities in the database.
      */
     virtual std::size_t count_articles() const = 0;
 };
+
+#endif

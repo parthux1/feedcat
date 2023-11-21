@@ -27,9 +27,9 @@ public:
 
     // non-NVI overrides
 public:
-    bool store_article(const RSS::Article& article) override;
+    bool store_article(const Article& article) override;
 
-    std::optional<RSS::Article> get_article(std::string url) const override;
+    std::optional<Article> get_article(std::string url) const override;
 
     std::size_t count_articles() const override;
 

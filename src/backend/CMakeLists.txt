@@ -15,7 +15,6 @@ set(feedcat_fulltext_parser
 
 add_library(feedcat_backend
         ArticlePropertyInterface.hpp
-        ArticlePropertyInterface.cpp
         ArticlePropertyHash.hpp
         ArticlePropertyHash.cpp
         Article.cpp
