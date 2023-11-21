@@ -11,7 +11,7 @@
 
 Article article;
 // ...
-auto myProperty = article->get<MyProperty>();
+std::optional<MyProperty*> myProperty = article->get<MyProperty>();
 ```
 
 # Define DB-Interactions for custom Properties
