@@ -15,16 +15,6 @@ ArticleBaseProperty::ArticleBaseProperty(std::string  title, std::string  url, s
 
 }
 
-bool ArticleBaseProperty::store(DatabaseInterface *db) const {
-    SPDLOG_WARN("not implemented");
-    return false;
-}
-
-bool ArticleBaseProperty::load(const DatabaseInterface *db) {
-    SPDLOG_WARN("not implemented");
-    return false;
-}
-
 bool ArticleBaseProperty::operator==(const ArticleBaseProperty& other) const
 {
     return url == other.url
