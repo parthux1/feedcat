@@ -2,8 +2,8 @@
 // Created by parthu on 11/18/23.
 //
 #pragma once
-#include <rss/FullTextParserStrategy.hpp>
 
+#include <network/FullTextParserStrategy.hpp>
 #include <cpr/cpr.h>
 #include <spdlog/spdlog.h>
 #include <tinyxml2.h>
