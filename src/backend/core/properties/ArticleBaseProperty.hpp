@@ -45,7 +45,9 @@ public:
 
     // derived functions
 public:
-    std::unique_ptr<ArticlePropertyInterface> copy() const override;
+    std::unique_ptr<ArticlePropertyInterface> copy_as_interface() const override;
+
+    ArticleBaseProperty copy() const noexcept;
 
 public:
     // as defined in https://www.rssboard.org/rss-specification

@@ -17,7 +17,7 @@ class ArticlePropertyInterface
 {
 public:
 
-    [[nodiscard]] virtual std::unique_ptr<ArticlePropertyInterface> copy() const = 0;
+    [[nodiscard]] virtual std::unique_ptr<ArticlePropertyInterface> copy_as_interface() const = 0;
 
     // allow polymorphic destruction
     virtual ~ArticlePropertyInterface() = default;

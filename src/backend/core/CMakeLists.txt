@@ -24,6 +24,8 @@ add_library(feedcat_core
         properties/ArticleBaseProperty.hpp
         properties/ArticleBaseProperty.cpp
         properties/ArticleBasePropertyDb.hpp
+# exceptions
+        exceptions/ArticleBasePropertyRequiredError.hpp
 )
 
 target_include_directories(feedcat_core PUBLIC

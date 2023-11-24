@@ -72,11 +72,17 @@ ArticleBaseProperty& ArticleBaseProperty::set_fulltext(const std::string& fullte
     return *this;
 }
 
-std::unique_ptr<ArticlePropertyInterface> ArticleBaseProperty::copy() const {
+std::unique_ptr<ArticlePropertyInterface> ArticleBaseProperty::copy_as_interface() const
+{
 
     auto* cpy = new ArticleBaseProperty(title, url, rss_url, description);
     cpy->description = description;
     cpy->fulltext = fulltext;
 
     return std::unique_ptr<ArticlePropertyInterface>(cpy);
+}
+
+ArticleBaseProperty ArticleBaseProperty::copy() const noexcept
+{
+    return ArticleBaseProperty{this->title, this->url, this->rss_url, this->description};
 }
