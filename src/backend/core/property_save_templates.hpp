@@ -32,7 +32,6 @@ template<typename T>
  * \note Apply this concept after overloading functions. Otherwise the call to decltype() will default to base templates
  * \example static_assert(PropertyDbStrategy<MyPropertyType>);
  * \example See src/backend/properties/ArticleBasePropertyDb.hpp
- * @tparam T
  */
 concept PropertyDbStrategy = requires()
 {
