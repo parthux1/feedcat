@@ -4,7 +4,7 @@
 #include "database_sqlite.hpp"
 
 // Static access
-
+#if false
 std::shared_ptr<DatabaseSqlLite> DatabaseSqlLite::get_instance(){
     // meyers singleton
     static auto instance = std::shared_ptr<DatabaseSqlLite>(new DatabaseSqlLite());
@@ -154,3 +154,4 @@ std::size_t DatabaseSqlLite::update_article_impl(const std::string& url_old, con
 
     return count;
 }
+#endif

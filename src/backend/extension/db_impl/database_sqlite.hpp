@@ -8,11 +8,11 @@
 #include <mutex>
 #include <memory>
 
-#include <SQLiteCpp/SQLiteCpp.h>
 #include <spdlog/spdlog.h>
 
-#include "database_interface.hpp"
+#include <db/database_interface.hpp>
 
+#if false
 class DatabaseSqlLite : public DatabaseInterface
 {
     // Singleton behavior
@@ -55,3 +55,4 @@ private:
     std::unique_ptr<SQLite::Database> db = nullptr;
 };
 
+#endif
