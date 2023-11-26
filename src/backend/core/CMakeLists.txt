@@ -20,10 +20,12 @@ add_library(feedcat_core
         ArticlePropertyInterface.hpp
         db/database_interface.hpp
         network/FullTextParserStrategy.hpp
+        SingleValueProperty.hpp
 # core-required properties
         properties/ArticleBaseProperty.hpp
         properties/ArticleBaseProperty.cpp
         properties/ArticleBasePropertyDb.hpp
+        properties/FulltextProperty.hpp
 # exceptions
         exceptions/ArticleBasePropertyRequiredError.hpp
 )
