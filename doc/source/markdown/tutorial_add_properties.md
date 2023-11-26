@@ -7,11 +7,11 @@
 ### Get your property
 ```cpp
 #include <article.hpp>
-#include <my_property.hpp>
+#include <MyPropertyType.hpp>
 
 Article article;
 // ...
-std::optional<MyProperty*> myProperty = article->get<MyProperty>();
+std::optional<MyPropertyType*> prop = article->get<MyPropertyType>();
 ```
 
 # Define DB-Interactions for custom Properties
