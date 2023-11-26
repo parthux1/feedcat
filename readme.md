@@ -3,14 +3,14 @@
 Store articles from RSS feeds and enrich them with custom information.
 
 ## Requirements
-| package                                              | req. package |
-|------------------------------------------------------| --- |
-| [SQLiteCpp](https://github.com/SRombauts/SQLiteCpp/) | sqlite3 |
 
-## Utility Requirements
-| Script                                              | req. package |
-| ------------------------------------------------------| --- |
-| [dependency-graph](https://github.com/pvigier/dependency-graph)                               | graphviz |
+following used projects have external dependencies. You might need to install them manually, 
+check their readme for more information.
+
+| package | When do I need this?                                  |
+|-------------------------------|-------------------------------------------------------|
+| [SQLiteCpp](https://github.com/SRombauts/SQLiteCpp/) | if you want to use the MySQL DB-Controller.           |
+| [dependency-graph](https://github.com/pvigier/dependency-graph) | if you want to visualize the architecture of feedcat. |
 
 
 ## Variation points
