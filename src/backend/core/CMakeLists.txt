@@ -25,7 +25,7 @@ add_library(feedcat_core
         properties/ArticleBaseProperty.hpp
         properties/ArticleBaseProperty.cpp
         properties/ArticleBasePropertyDb.hpp
-        properties/FulltextProperty.hpp
+        properties/fulltext/FulltextProperty.hpp
 # exceptions
         exceptions/ArticleBasePropertyRequiredError.hpp
 )
