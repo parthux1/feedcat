@@ -31,9 +31,7 @@ public:
 
     [[nodiscard]] std::unique_ptr<ArticlePropertyInterface> copy_as_interface() const override
     {
-        auto* copy = static_cast<DerivedClass*>(new SingleValueProperty<T, DerivedClass>(value));
-
-        return std::unique_ptr<ArticlePropertyInterface>(copy);
+        return std::make_unique<DerivedClass>(value);
     }
 
     const T& get() const
