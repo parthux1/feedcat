@@ -5,8 +5,19 @@
 #pragma once
 #include <gtest/gtest.h>
 #include<SingleValueProperty.hpp>
+#include<ArticlePropertyHash.hpp>
 
-class TestProperty : public SingleValueProperty<std::string, TestProperty>
+class TestStringProperty : public SingleValueProperty<std::string, TestStringProperty>
 {
-    using SingleValueProperty<std::string, TestProperty>::SingleValueProperty;
+    using SingleValueProperty<std::string, TestStringProperty>::SingleValueProperty;
+};
+
+class TestString2Property : public SingleValueProperty<std::string, TestString2Property>
+{
+    using SingleValueProperty<std::string, TestString2Property>::SingleValueProperty;
+};
+
+class TestIntProperty : public SingleValueProperty<int, TestIntProperty>
+{
+    using SingleValueProperty<int, TestIntProperty>::SingleValueProperty;
 };
