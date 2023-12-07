@@ -31,6 +31,13 @@ public:
         value = typeid(T).hash_code();
     }
 
+    template<typename T>
+    requires std::derived_from<T, ArticlePropertyInterface>
+    explicit ArticlePropertyHash(const T& property)
+    {
+        value = typeid(T).hash_code();
+    }
+
     ~ArticlePropertyHash() = default;
 
 public:
