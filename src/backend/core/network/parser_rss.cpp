@@ -70,7 +70,8 @@ std::optional<Article> Parser::RSSVisitor::get_article(const tinyxml2::XMLElemen
 
         if(xml_node == nullptr || xml_node->GetText() == nullptr)
         {
-            SPDLOG_DEBUG("Article is missing Tag:{}", tag);
+            SPDLOG_ERROR("Article is missing Tag:{}", tag);
+            // continue if we handle an optional value e.g. pubDate
             return std::nullopt;
         }
 
@@ -80,7 +81,12 @@ std::optional<Article> Parser::RSSVisitor::get_article(const tinyxml2::XMLElemen
     ArticleBaseProperty article_base{article_title, article_url, url, article_date};
     article_base.set_description(article_description);
 
-    return Article{article_base};
+    Article article{article_base};
+
+    // TODO: Ticket #10 - parse date formats
+    article.add_property(std::make_unique<DateProperty>(std::time_t{}));
+
+    return article;
 }
 
 const std::vector<Article>& Parser::RSSVisitor::get_articles() const noexcept

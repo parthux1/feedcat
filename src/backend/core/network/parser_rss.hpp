@@ -12,6 +12,9 @@
 
 #include <Article.hpp>
 
+// optional core properties extracted from RSS
+#include <properties/date/DateProperty.hpp>
+
 namespace RSS::Parser
 {
     /*!
