@@ -74,6 +74,7 @@ Article Article::copy_except(std::vector<ArticlePropertyHash> hashes) const
         cp.add_property(property->copy_as_interface());
     }
 
+    return cp;
 }
 
 
@@ -100,4 +101,6 @@ Article Article::copy_only(std::vector<ArticlePropertyHash> hashes) const
 
         cp.add_property(property.value()->copy_as_interface());
     }
+
+    return cp;
 }
