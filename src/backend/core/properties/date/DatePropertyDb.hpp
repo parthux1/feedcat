@@ -2,7 +2,7 @@
 // Created by parthu on 12/7/23.
 //
 
-#include <property_save_templates.hpp>
+#include <db/database_interface.hpp>
 #include "DateProperty.hpp"
 
 template<>
@@ -16,5 +16,3 @@ std::optional<DateProperty> load_property(DatabaseInterface* db)
 {
     return std::nullopt;
 }
-
-static_assert(PropertyDbStrategy<DateProperty>);

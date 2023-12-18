@@ -4,7 +4,7 @@
 #pragma once
 
 #include <properties/ArticleBaseProperty.hpp>
-#include <property_save_templates.hpp>
+#include <db/database_interface.hpp>
 
 template<>
 bool store_property(const ArticleBaseProperty* property, DatabaseInterface* db)
@@ -17,5 +17,3 @@ std::optional<ArticleBaseProperty> load_property(DatabaseInterface* db)
 {
     return std::nullopt;
 }
-
-static_assert(PropertyDbStrategy<ArticleBaseProperty>);
