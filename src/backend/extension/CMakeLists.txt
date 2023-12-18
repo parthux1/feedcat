@@ -23,7 +23,9 @@ add_library(feedcat_extension
 
 target_include_directories(feedcat_extension
         PUBLIC ${CMAKE_SOURCE_DIR}/lib
-        PUBLIC ${CMAKE_SOURCE_DIR}/backend/core)
+        PUBLIC ${CMAKE_SOURCE_DIR}/backend/core
+        PUBLIC ${CMAKE_SOURCE_DIR}/lib/SQLiteCpp/include
+)
 
 target_link_libraries(feedcat_extension
         PUBLIC sqlite3
