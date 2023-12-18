@@ -43,6 +43,13 @@ requires std::derived_from<T, ArticlePropertyInterface>
 std::optional<T> load_property(DatabaseInterface* db, const DatabaseID& id) = delete;
 
 /*!
+ * \brief Returns the name of the table used for the given property
+ */
+template<typename T>
+requires std::derived_from<T, ArticlePropertyInterface>
+std::string table_for_property() = delete;
+
+/*!
  * \note Apply this concept after overloading functions. Otherwise the call to decltype() will default to base templates
  */
 template<typename T>
@@ -51,6 +58,7 @@ concept PropertyDbStrategy = requires()
     requires std::derived_from<T, ArticlePropertyInterface>; // Redundant
     requires std::invocable<decltype(load_property<T>), DatabaseInterface*, DatabaseID>;
     requires std::invocable<decltype(store_property<T>), T*, DatabaseInterface*>;
+    requires std::invocable<decltype(table_for_property<T>)>;
 };
 
 
@@ -82,6 +90,11 @@ public:
      * \brief Checks if a property with the given id exists
      */
     virtual bool has_id(const DatabaseID& id) const = 0;
+
+    /*!
+     * \brief Checks if a table with the given name exists
+     */
+    virtual bool has_table(const std::string& name) const = 0;
 
     /*!
      * \brief Returns the number of stored properties
