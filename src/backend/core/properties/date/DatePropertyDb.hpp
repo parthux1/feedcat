@@ -6,13 +6,13 @@
 #include "DateProperty.hpp"
 
 template<>
-bool store_property(const DateProperty* property, DatabaseInterface* db)
+std::optional<DatabaseID> store_property(const DateProperty* property, DatabaseInterface* db)
 {
-    return false;
+    return std::nullopt;
 }
 
 template<>
-std::optional<DateProperty> load_property(DatabaseInterface* db)
+std::optional<DateProperty> load_property(DatabaseInterface* db, const DatabaseID& id)
 {
     return std::nullopt;
 }

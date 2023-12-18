@@ -11,11 +11,14 @@
 
 #include <string>
 #include <optional>
+#include <list>
 #include <concepts>
+
 #include <ArticlePropertyInterface.hpp>
 
-// free template functions
-class DatabaseInterface;
+using DatabaseID = std::size_t;
+
+class DatabaseInterface; // forward declaration needed for free template functions
 
 /*!
  *
@@ -37,7 +40,7 @@ std::optional<std::size_t> store_property(const T* property, DatabaseInterface* 
  */
 template<typename T>
 requires std::derived_from<T, ArticlePropertyInterface>
-std::optional<T> load_property(DatabaseInterface* db, std::size_t id) = delete;
+std::optional<T> load_property(DatabaseInterface* db, const DatabaseID& id) = delete;
 
 /*!
  * \note Apply this concept after overloading functions. Otherwise the call to decltype() will default to base templates
@@ -46,19 +49,22 @@ template<typename T>
 concept PropertyDbStrategy = requires()
 {
     requires std::derived_from<T, ArticlePropertyInterface>; // Redundant
-    requires std::invocable<decltype(load_property<T>), DatabaseInterface*>;
+    requires std::invocable<decltype(load_property<T>), DatabaseInterface*, DatabaseID>;
     requires std::invocable<decltype(store_property<T>), T*, DatabaseInterface*>;
 };
 
 
-// Simple Database-oriented wrapper around free template functions
+/*!
+ * \brief Interface for simpler database interactions with custom connectors
+ */
 class DatabaseInterface
 {
+public:
     /*!
      * \brief Calls free function store_property<T>
      */
     template<PropertyDbStrategy T>
-    std::optional<std::size_t> store_property(const T* property)
+    std::optional<DatabaseID> store_property(const T* property)
     {
         return store_property(property, this);
     }
@@ -67,8 +73,18 @@ class DatabaseInterface
      * \brief Calls free function load_property<T>
      */
     template<PropertyDbStrategy T>
-    std::optional<T> load_property(std::size_t id)
+    std::optional<T> load_property(const DatabaseID& id)
     {
         return load_property<T>(this);
     }
+
+    /*!
+     * \brief Checks if a property with the given id exists
+     */
+    virtual bool has_id(const DatabaseID& id) const = 0;
+
+    /*!
+     * \brief Returns the number of stored properties
+     */
+    virtual std::list<DatabaseID> get_all_ids() const = 0;
 };

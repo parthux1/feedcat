@@ -7,13 +7,13 @@
 #include <db/database_interface.hpp>
 
 template<>
-bool store_property(const ArticleBaseProperty* property, DatabaseInterface* db)
+std::optional<DatabaseID> store_property(const ArticleBaseProperty* property, DatabaseInterface* db)
 {
-    return false;
+    return std::nullopt;
 }
 
 template<>
-std::optional<ArticleBaseProperty> load_property(DatabaseInterface* db)
+std::optional<ArticleBaseProperty> load_property(DatabaseInterface* db, const DatabaseID& id)
 {
     return std::nullopt;
 }
