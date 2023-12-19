@@ -29,5 +29,6 @@ target_include_directories(feedcat_extension
 
 target_link_libraries(feedcat_extension
         PUBLIC sqlite3
+        PUBLIC SQLiteCpp
         PUBLIC feedcat_core
 )
