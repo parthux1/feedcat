@@ -19,6 +19,9 @@ add_library(feedcat_core
 # Interfaces & Strategies
         ArticlePropertyInterface.hpp
         db/database_interface.hpp
+        db/database_interface.cpp
+        db/database_types.hpp
+        db/property_serialize_functions.hpp
         network/FullTextParserStrategy.hpp
         SingleValueProperty.hpp
 # core-required properties

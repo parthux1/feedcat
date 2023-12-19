@@ -9,58 +9,20 @@
  */
 #pragma once
 
+#include <algorithm>
 #include <string>
 #include <optional>
 #include <list>
 #include <concepts>
 
+#include <db/property_serialize_functions.hpp>
 #include <ArticlePropertyInterface.hpp>
 
-using DatabaseID = std::size_t;
+void sanitize(std::string& str);
 
-class DatabaseInterface; // forward declaration needed for free template functions
+void sanitize(SerializedMapping& mapping);
 
-/*!
- *
- * \tparam T ArticleProperty Type to store
- * \param property ArticleProperty Instance to store
- * \param db Db Instance to work on
- * \return an unique id of the stored object if successful
- */
-template<typename T>
-requires std::derived_from<T, ArticlePropertyInterface>
-std::optional<std::size_t> store_property(const T* property, DatabaseInterface* db) = delete;
-
-/*!
- *
- * \tparam T ArticleProperty Type to load
- * \param db Db Instance to work on
- * \param id unique id of an object to load
- * \returns an initialized ArticleProperty if existing
- */
-template<typename T>
-requires std::derived_from<T, ArticlePropertyInterface>
-std::optional<T> load_property(DatabaseInterface* db, const DatabaseID& id) = delete;
-
-/*!
- * \brief Returns the name of the table used for the given property
- */
-template<typename T>
-requires std::derived_from<T, ArticlePropertyInterface>
-std::string table_for_property() = delete;
-
-/*!
- * \note Apply this concept after overloading functions. Otherwise the call to decltype() will default to base templates
- */
-template<typename T>
-concept PropertyDbStrategy = requires()
-{
-    requires std::derived_from<T, ArticlePropertyInterface>; // Redundant
-    requires std::invocable<decltype(load_property<T>), DatabaseInterface*, DatabaseID>;
-    requires std::invocable<decltype(store_property<T>), T*, DatabaseInterface*>;
-    requires std::invocable<decltype(table_for_property<T>)>;
-};
-
+void sanitize(SerializedValues& vals);
 
 /*!
  * \brief Interface for simpler database interactions with custom connectors
@@ -69,21 +31,54 @@ class DatabaseInterface
 {
 public:
     /*!
-     * \brief Calls free function store_property<T>
+     * \brief Stores a property. Creates the corresponding table if it does not exist
      */
-    template<PropertyDbStrategy T>
-    std::optional<DatabaseID> store_property(const T* property)
+    template<PropertyIsStorable T>
+    std::optional<DatabaseID> store_property(const T& property)
     {
-        return store_property(property, this);
+        auto table = table_name<T>();
+        sanitize(table);
+
+        if(!has_table(table))
+        {
+            auto mapping = serialize_mapping<T>();
+            append_ids(mapping);
+            sanitize(mapping);
+
+            if(!make_table(table, mapping))
+            {
+                return std::nullopt;
+            }
+        }
+        auto data = serialize(property);
+        sanitize(data);
+
+        const auto res = store_entry(table, data);
+
+        return res;
     }
 
     /*!
-     * \brief Calls free function load_property<T>
+     * \brief Loads a property with the given id if possible
      */
-    template<PropertyDbStrategy T>
+    template<PropertyIsStorable T>
     std::optional<T> load_property(const DatabaseID& id)
     {
-        return load_property<T>(this);
+        auto table = table_name<T>();
+        sanitize(table);
+        const auto mapping = serialize_mapping<T>();
+        sanitize(mapping);
+
+        const auto entry = load_entry(table, mapping, id);
+
+        if(!entry)
+        {
+            SPDLOG_ERROR("Could not load entry with id {} from table {}", id, table);
+            return std::nullopt;
+        }
+
+        const auto res = deserialize<T>(entry.value());
+        return res;
     }
 
     /*!
@@ -100,4 +95,22 @@ public:
      * \brief Returns the number of stored properties
      */
     virtual std::list<DatabaseID> get_all_ids() const = 0;
+
+protected:
+    virtual bool make_table(const std::string& name, const SerializedMapping& mapping) = 0;
+
+    virtual std::optional<DatabaseID> store_entry(const std::string& table, const SerializedValues& values) = 0;
+
+    virtual std::optional<SerializedValues> load_entry(const std::string& table, const SerializedMapping& expected_mapping, const DatabaseID& id) = 0;
+
+private:
+    /*!
+     * \brief Add internal ID mappings to the given mapping
+     * \returns a complete TableMapping for the given property
+    */
+    static void append_ids(SerializedMapping& mapping)
+    {
+        // TODO: better error handling. will crash if value already exists
+        mapping.insert({"id_unique", DatabaseFieldType::PRIMARY_KEY});
+    }
 };
