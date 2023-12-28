@@ -3,3 +3,6 @@
 
 # Build dirs
 cmake-build-*
+
+# test runs
+res/test/

@@ -15,3 +15,6 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/src/backend)
 add_subdirectory(${PROJECT_SOURCE_DIR}/src/console)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/src/tui)
+
+# tests
+add_subdirectory(${PROJECT_SOURCE_DIR}/tests)

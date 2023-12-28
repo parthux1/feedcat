@@ -8,11 +8,11 @@
 #include <mutex>
 #include <memory>
 
-#include <SQLiteCpp/SQLiteCpp.h>
 #include <spdlog/spdlog.h>
 
-#include "database_interface.hpp"
+#include <db/database_interface.hpp>
 
+#if false
 class DatabaseSqlLite : public DatabaseInterface
 {
     // Singleton behavior
@@ -27,9 +27,9 @@ public:
 
     // non-NVI overrides
 public:
-    bool store_article(const RSS::Article& article) override;
+    bool store_article(const Article& article) override;
 
-    std::optional<RSS::Article> get_article(std::string url) const override;
+    std::optional<Article> get_article(std::string url) const override;
 
     std::size_t count_articles() const override;
 
@@ -55,3 +55,4 @@ private:
     std::unique_ptr<SQLite::Database> db = nullptr;
 };
 
+#endif
