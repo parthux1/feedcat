@@ -18,12 +18,15 @@ add_library(feedcat_core
         network/parser_rss.cpp
 # Interfaces & Strategies
         ArticlePropertyInterface.hpp
+        network/FullTextParserStrategy.hpp
+        SingleValueProperty.hpp
+# DB
         db/database_interface.hpp
         db/database_interface.cpp
         db/database_types.hpp
         db/property_serialize_functions.hpp
-        network/FullTextParserStrategy.hpp
-        SingleValueProperty.hpp
+        db/SanitizedString.hpp
+        db/SanitizedString.cpp
 # core-required properties
         properties/ArticleBaseProperty.hpp
         properties/ArticleBaseProperty.cpp

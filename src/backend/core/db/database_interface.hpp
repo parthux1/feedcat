@@ -18,11 +18,20 @@
 #include <db/property_serialize_functions.hpp>
 #include <ArticlePropertyInterface.hpp>
 
-void sanitize(std::string& str);
 
-void sanitize(SerializedMapping& mapping);
+/*!
+ * \brief Sanitizes table names of a SerizalizedMapping
+ * \param mapping
+ * \returns sanitized mapping
+ */
+SanitizedMapping sanitize(SerializedMapping& mapping);
 
-void sanitize(SerializedValues& vals);
+/*!
+ * \brief Sanitizes values of a SerializedValues
+ * \param vals
+ * \returns sanitized values
+ */
+SanitizedValues sanitize(SerializedValues& vals);
 
 /*!
  * \brief Interface for simpler database interactions with custom connectors
@@ -43,17 +52,17 @@ public:
         {
             auto mapping = serialize_mapping<T>();
             append_ids(mapping);
-            sanitize(mapping);
+            const auto mapping_s = sanitize(mapping);
 
-            if(!make_table(table, mapping))
+            if(!make_table(table, mapping_s))
             {
                 return std::nullopt;
             }
         }
         auto data = serialize(property);
-        sanitize(data);
+        const auto data_s = sanitize(data);
 
-        const auto res = store_entry(table, data);
+        const auto res = store_entry(table, data_s);
 
         return res;
     }
@@ -67,9 +76,9 @@ public:
         auto table = table_name<T>();
         sanitize(table);
         const auto mapping = serialize_mapping<T>();
-        sanitize(mapping);
+        const auto mapping_s = sanitize(mapping);
 
-        const auto entry = load_entry(table, mapping, id);
+        const auto entry = load_entry(table, mapping_s, id);
 
         if(!entry)
         {
@@ -97,11 +106,11 @@ public:
     virtual std::list<DatabaseID> get_all_ids() const = 0;
 
 protected:
-    virtual bool make_table(const std::string& name, const SerializedMapping& mapping) = 0;
+    virtual bool make_table(const std::string& name, const SanitizedMapping & mapping) = 0;
 
-    virtual std::optional<DatabaseID> store_entry(const std::string& table, const SerializedValues& values) = 0;
+    virtual std::optional<DatabaseID> store_entry(const std::string& table, const SanitizedValues & values) = 0;
 
-    virtual std::optional<SerializedValues> load_entry(const std::string& table, const SerializedMapping& expected_mapping, const DatabaseID& id) = 0;
+    virtual std::optional<SerializedValues> load_entry(const std::string& table, const SanitizedMapping & expected_mapping, const DatabaseID& id) = 0;
 
 private:
     /*!

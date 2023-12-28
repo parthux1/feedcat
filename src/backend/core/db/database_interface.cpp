@@ -4,39 +4,29 @@
 
 #include "database_interface.hpp"
 
-void sanitize(std::string& str)
+SanitizedMapping sanitize(SerializedMapping& mapping)
 {
-    str.erase(std::remove(str.begin(), str.end(), '\''), str.end());
-    str.erase(std::remove(str.begin(), str.end(), ';'), str.end());
-
-}
-
-void sanitize(SerializedMapping& mapping)
-{
-for(const auto& [key, value] : mapping)
-    {
-        auto key_new = key;
-        sanitize(key_new);
-
-        if(key_new != key)
+    SanitizedMapping res{};
+    for(const auto& [key, value] : mapping)
         {
-            mapping.erase(key);
-            mapping[key_new] = value;
+            SanitizedString key_new{key};
+            res.insert({key_new, value});
         }
-    }
+
+    return res;
 }
 
-void sanitize(SerializedValues& vals)
+SanitizedValues sanitize(SerializedValues& vals)
 {
+    SanitizedValues res;
     for(auto& [key, value] : vals)
     {
-        auto key_new = key;
-        sanitize(key_new);
-
+        SanitizedString key_new{key};
         if(key_new != key)
         {
-            vals.erase(key);
-            vals[key_new] = value;
+            res.insert({key_new, value});
         }
     }
+
+    return res;
 }

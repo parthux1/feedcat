@@ -7,6 +7,8 @@
 #include <ctime>
 #include <unordered_map>
 
+#include <db/SanitizedString.hpp>
+
 using DatabaseID = std::size_t;
 
 enum class DatabaseFieldType
@@ -21,3 +23,6 @@ using DatabaseField = std::variant<std::string, int, std::time_t, DatabaseID>;
 
 using SerializedMapping = std::unordered_map<std::string, DatabaseFieldType>;
 using SerializedValues = std::unordered_map<std::string, DatabaseField>;
+
+using SanitizedMapping = std::unordered_map<SanitizedString, DatabaseFieldType>;
+using SanitizedValues = std::unordered_map<SanitizedString, DatabaseField>;
