@@ -12,6 +12,11 @@ std::string sanitize(std::string str)
     return str;
 }
 
+SanitizedString::SanitizedString(std::string str)
+{
+    str = sanitize(str);
+}
+
 bool SanitizedString::operator==(const SanitizedString& other) const noexcept
 {
     return str_ == other.str_;

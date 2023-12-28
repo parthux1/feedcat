@@ -9,10 +9,7 @@ std::string sanitize(std::string str);
 
 class SanitizedString {
 public:
-    SanitizedString(std::string str)
-    {
-        str = sanitize(str);
-    }
+    SanitizedString(std::string str);
 
     bool operator==(const SanitizedString& other) const noexcept;
 
