@@ -4,8 +4,8 @@
 
 #pragma once
 #include <gtest/gtest.h>
-#include<SingleValueProperty.hpp>
-#include<ArticlePropertyHash.hpp>
+#include <core/SingleValueProperty.hpp>
+#include <core/ArticlePropertyHash.hpp>
 
 class TestStringProperty : public SingleValueProperty<std::string, TestStringProperty>
 {

@@ -3,11 +3,12 @@
 //
 #pragma once
 
-#include <network/FullTextParserStrategy.hpp>
 #include <cpr/cpr.h>
 #include <spdlog/spdlog.h>
 #include <tinyxml2.h>
-#include <helper/helper_tinyxml2.hpp>
+
+#include <core/network/FullTextParserStrategy.hpp>
+#include <core/helper/helper_tinyxml2.hpp>
 
 namespace RSS
 {
