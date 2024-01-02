@@ -4,7 +4,7 @@
 
 #include "database_interface.hpp"
 
-SanitizedMapping sanitize(SerializedMapping& mapping)
+SanitizedMapping sanitize(const SerializedMapping& mapping)
 {
     SanitizedMapping res{};
     for(const auto& [key, value] : mapping)
@@ -16,7 +16,7 @@ SanitizedMapping sanitize(SerializedMapping& mapping)
     return res;
 }
 
-SanitizedValues sanitize(SerializedValues& vals)
+SanitizedValues sanitize(const SerializedValues& vals)
 {
     SanitizedValues res;
     for(auto& [key, value] : vals)

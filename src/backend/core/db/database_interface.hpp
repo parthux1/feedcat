@@ -26,14 +26,14 @@
  * \param mapping
  * \returns sanitized mapping
  */
-SanitizedMapping sanitize(SerializedMapping& mapping);
+SanitizedMapping sanitize(const SerializedMapping& mapping);
 
 /*!
  * \brief Sanitizes values of a SerializedValues
  * \param vals
  * \returns sanitized values
  */
-SanitizedValues sanitize(SerializedValues& vals);
+SanitizedValues sanitize(const SerializedValues& vals);
 
 /*!
  * \brief Interface for simpler database interactions with custom connectors
@@ -57,7 +57,7 @@ public:
             const auto primary_count = std::count_if(mapping.begin(), mapping.end(), [](const auto& pair){return pair.second == DatabaseFieldType::PRIMARY_KEY;});
             if(primary_count != 1)
             {
-                SPDLOG_ERROR("Expected 1 primary key for table {} but found {}. Don't add custom primary keys.", table, primary_count);
+                SPDLOG_ERROR("Expected 1 primary key for table {} but found {}. Don't add custom primary keys.", table.data(), primary_count);
                 return std::nullopt;
             }
 
