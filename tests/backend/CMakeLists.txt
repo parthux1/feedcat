@@ -13,7 +13,7 @@ add_executable(feedcat_test_backend
 )
 
 target_link_libraries(feedcat_test_backend
-    PRIVATE feedcat_extension
+    PUBLIC feedcat_extension
     PRIVATE GTest::gtest_main
 )
 
