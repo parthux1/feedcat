@@ -59,8 +59,8 @@ public:
     /*!
      * \brief Get a dynamic-casted property by its hash. Requires information about properties at compile time.
      * \tparam T property to get
+     * \note std::optional<T&> does not exist but might be useful here
      * \return non-owning property-pointer if it exists, otherwise std::nullopt
-     * \throws std::runtime_error if ArticleBaseProperty should be removed or a given property does not exist in this article.
      */
     template<typename T>
         requires std::derived_from<T, ArticlePropertyInterface>
@@ -75,6 +75,7 @@ public:
     /*!
      * \brief Get a dynamic-casted property by its hash. Requires information about properties at compile time.
      * \tparam T property to get
+     * \note std::optional<T&> does not exist but might be useful here
      * \returns non-owning property-pointer if it exists, otherwise std::nullopt
      */
     template<typename T>
