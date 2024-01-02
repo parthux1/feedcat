@@ -40,15 +40,17 @@ add_library(feedcat_core
 )
 
 target_include_directories(feedcat_core
-        PUBLIC ${CMAKE_SOURCE_DIR}/lib
+        PUBLIC ${CMAKE_SOURCE_DIR}/lib/cpr/include
+        PUBLIC ${CMAKE_SOURCE_DIR}/lib/spdlog/include
+        PUBLIC ${CMAKE_SOURCE_DIR}/lib/tinyxml2/include
         PUBLIC  ${CMAKE_SOURCE_DIR}/src/backend
 )
 
 target_compile_definitions(feedcat_core PUBLIC SPDLOG_ACTIVE_LEVEL=${SPDLOG_ACTIVE_LEVEL})
 
 
-target_link_libraries(feedcat_core PUBLIC
-        spdlog::spdlog
-        cpr::cpr
-        tinyxml2
+target_link_libraries(feedcat_core
+        PUBLIC spdlog::spdlog
+        PUBLIC cpr::cpr
+        PUBLIC tinyxml2
 )
