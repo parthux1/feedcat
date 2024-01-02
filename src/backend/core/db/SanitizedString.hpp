@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <functional>
 
-std::string sanitize(std::string str);
+std::string sanitize(std::string str); //non const& on purpose
 
 class SanitizedString {
 public:
@@ -13,7 +13,7 @@ public:
 
     bool operator==(const SanitizedString& other) const noexcept;
 
-    const std::string& get() const noexcept;
+    const std::string& data() const noexcept;
 
 private:
     std::string str_;
@@ -27,6 +27,6 @@ struct std::hash<SanitizedString>
 {
     std::size_t operator()(const SanitizedString& k) const
     {
-        return std::hash<std::string>{}(k.get());
+        return std::hash<std::string>{}(k.data());
     }
 };
