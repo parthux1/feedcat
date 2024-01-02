@@ -23,7 +23,7 @@ bool SanitizedString::operator==(const SanitizedString& other) const noexcept
 }
 
 
-const std::string& SanitizedString::get() const noexcept
+const std::string& SanitizedString::data() const noexcept
 {
     return str_;
 }
