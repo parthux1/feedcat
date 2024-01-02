@@ -45,14 +45,21 @@ public:
     template<PropertyIsStorable T>
     std::optional<DatabaseID> store_property(const T& property)
     {
-        auto table = table_name<T>();
-        sanitize(table);
+        const SanitizedString table = sanitize(table_name<T>());
 
-        if(!has_table(table))
+        if(!has_table(table.data()))
         {
             auto mapping = serialize_mapping<T>();
             append_ids(mapping);
-            const auto mapping_s = sanitize(mapping);
+
+            const auto primary_count = std::count_if(mapping.begin(), mapping.end(), [](const auto& pair){return pair.second == DatabaseFieldType::PRIMARY_KEY;});
+            if(primary_count != 1)
+            {
+                SPDLOG_ERROR("Expected 1 primary key for table {} but found {}. Don't add custom primary keys.", table, primary_count);
+                return std::nullopt;
+            }
+
+            const SanitizedMapping mapping_s = sanitize(mapping);
 
             if(!make_table(table, mapping_s))
             {
@@ -73,16 +80,13 @@ public:
     template<PropertyIsStorable T>
     std::optional<T> load_property(const DatabaseID& id)
     {
-        auto table = table_name<T>();
-        sanitize(table);
-        const auto mapping = serialize_mapping<T>();
-        const auto mapping_s = sanitize(mapping);
-
-        const auto entry = load_entry(table, mapping_s, id);
+        const SanitizedString table = sanitize(table_name<T>());
+        const SanitizedMapping mapping = sanitize(serialize_mapping<T>());
+        const auto entry = load_entry(table, mapping, id);
 
         if(!entry)
         {
-            SPDLOG_ERROR("Could not load entry with id {} from table {}", id, table);
+            SPDLOG_ERROR("Could not load entry with id {} from table {}", id, table.data());
             return std::nullopt;
         }
 
@@ -98,7 +102,7 @@ public:
     /*!
      * \brief Checks if a table with the given name exists
      */
-    virtual bool has_table(const std::string& name) const = 0;
+    virtual bool has_table(const SanitizedString& name) const = 0;
 
     /*!
      * \brief Returns the number of stored properties
@@ -106,11 +110,11 @@ public:
     virtual std::list<DatabaseID> get_all_ids() const = 0;
 
 protected:
-    virtual bool make_table(const std::string& name, const SanitizedMapping & mapping) = 0;
+    virtual bool make_table(const SanitizedString& name, const SanitizedMapping& mapping) = 0;
 
-    virtual std::optional<DatabaseID> store_entry(const std::string& table, const SanitizedValues & values) = 0;
+    virtual std::optional<DatabaseID> store_entry(const SanitizedString& table, const SanitizedValues& values) = 0;
 
-    virtual std::optional<SerializedValues> load_entry(const std::string& table, const SanitizedMapping & expected_mapping, const DatabaseID& id) = 0;
+    virtual std::optional<SerializedValues> load_entry(const SanitizedString& table, const SanitizedMapping& expected_mapping, const DatabaseID& id) = 0;
 
 private:
     /*!
@@ -119,7 +123,6 @@ private:
     */
     static void append_ids(SerializedMapping& mapping)
     {
-        // TODO: better error handling. will crash if value already exists
-        mapping.insert({"id_unique", DatabaseFieldType::PRIMARY_KEY});
+        mapping["id"] = DatabaseFieldType::PRIMARY_KEY;
     }
 };
