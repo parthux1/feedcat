@@ -3,8 +3,8 @@
 //
 #pragma once
 
-#include <properties/ArticleBaseProperty.hpp>
-#include <db/property_serialize_functions.hpp>
+#include <core/properties/ArticleBaseProperty.hpp>
+#include <core/db/property_serialize_functions.hpp>
 
 template<>
 std::string table_name<ArticleBaseProperty>()

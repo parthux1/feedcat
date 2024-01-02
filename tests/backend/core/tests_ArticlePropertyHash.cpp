@@ -4,8 +4,8 @@
 
 #include <gtest/gtest.h>
 
-#include <ArticlePropertyHash.hpp>
-#include <properties/ArticleBaseProperty.hpp>
+#include <core/ArticlePropertyHash.hpp>
+#include <core/properties/ArticleBaseProperty.hpp>
 
 TEST(ArticlePropertyHash, hash_similar_ptr)
 {

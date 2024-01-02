@@ -39,9 +39,10 @@ add_library(feedcat_core
         exceptions/ArticleBasePropertyRequiredError.hpp
 )
 
-target_include_directories(feedcat_core PUBLIC
-        ${CMAKE_SOURCE_DIR}/lib
-        .)
+target_include_directories(feedcat_core
+        PUBLIC ${CMAKE_SOURCE_DIR}/lib
+        PUBLIC  ${CMAKE_SOURCE_DIR}/src/backend
+)
 
 target_compile_definitions(feedcat_core PUBLIC SPDLOG_ACTIVE_LEVEL=${SPDLOG_ACTIVE_LEVEL})
 

@@ -7,7 +7,7 @@
 #include <ctime>
 #include <unordered_map>
 
-#include <db/SanitizedString.hpp>
+#include <core/db/SanitizedString.hpp>
 
 using DatabaseID = std::size_t;
 

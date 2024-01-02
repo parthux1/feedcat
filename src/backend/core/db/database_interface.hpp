@@ -15,8 +15,10 @@
 #include <list>
 #include <concepts>
 
-#include <db/property_serialize_functions.hpp>
-#include <ArticlePropertyInterface.hpp>
+#include <spdlog/spdlog.h>
+
+#include <core/db/property_serialize_functions.hpp>
+#include <core/ArticlePropertyInterface.hpp>
 
 
 /*!

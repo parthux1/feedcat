@@ -7,11 +7,11 @@
 #include <unordered_map>
 #include <optional>
 
-#include <ArticlePropertyInterface.hpp>
-#include <ArticlePropertyHash.hpp>
-#include <properties/ArticleBaseProperty.hpp> // required because it contains basic article definitions
+#include <core/ArticlePropertyInterface.hpp>
+#include <core/ArticlePropertyHash.hpp>
+#include <core/properties/ArticleBaseProperty.hpp> // required because it contains basic article definitions
 
-#include <exceptions/ArticleBasePropertyRequiredError.hpp>
+#include <core/exceptions/ArticleBasePropertyRequiredError.hpp>
 
 class Article
 {

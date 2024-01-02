@@ -6,7 +6,7 @@
 #include <memory>
 #include <type_traits>
 
-#include <ArticlePropertyInterface.hpp>
+#include <core/ArticlePropertyInterface.hpp>
 
 template<typename T, typename DerivedClass>
 requires std::is_copy_constructible_v<T> // required for constructor definition

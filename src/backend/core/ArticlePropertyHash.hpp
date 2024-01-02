@@ -6,7 +6,7 @@
 #include <concepts>
 #include <typeinfo>
 
-#include <ArticlePropertyInterface.hpp>
+#include <core/ArticlePropertyInterface.hpp>
 
 /*!
  * \brief This class constrains typeid hashes to be from a class derived from ArticlePropertyInterface

@@ -3,8 +3,8 @@
 //
 #pragma once
 
-#include <db/database_types.hpp>
-#include <ArticlePropertyInterface.hpp>
+#include <core/db/database_types.hpp>
+#include <core/ArticlePropertyInterface.hpp>
 
 template<typename T>
 SerializedMapping serialize_mapping() = delete;

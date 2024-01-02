@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include <SingleValueProperty.hpp>
+#include <core/SingleValueProperty.hpp>
 
 class FulltextProperty : public SingleValueProperty<std::string, FulltextProperty>
 {

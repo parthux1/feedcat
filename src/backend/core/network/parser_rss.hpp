@@ -10,10 +10,10 @@
 #include <spdlog/spdlog.h>
 #include <cpr/cpr.h>
 
-#include <Article.hpp>
+#include <core/Article.hpp>
 
 // optional core properties extracted from RSS
-#include <properties/date/DateProperty.hpp>
+#include <core/properties/date/DateProperty.hpp>
 
 namespace RSS::Parser
 {

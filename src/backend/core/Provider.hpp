@@ -4,9 +4,9 @@
 #include <vector>
 #include <memory>
 
-#include <Feed.hpp>
-#include <network/FullTextParserStrategy.hpp>
-#include <network/parser_rss.hpp>
+#include <core/Feed.hpp>
+#include <core/network/FullTextParserStrategy.hpp>
+#include <core/network/parser_rss.hpp>
 
 class Provider
 {

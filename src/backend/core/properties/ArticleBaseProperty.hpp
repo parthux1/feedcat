@@ -9,7 +9,7 @@
 #include <memory>
 #include <string>
 
-#include <ArticlePropertyInterface.hpp>
+#include <core/ArticlePropertyInterface.hpp>
 
 
 class ArticleBaseProperty : public ArticlePropertyInterface

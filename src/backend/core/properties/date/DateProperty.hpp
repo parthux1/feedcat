@@ -4,7 +4,7 @@
 #pragma once
 
 #include <ctime>
-#include <SingleValueProperty.hpp>
+#include <core/SingleValueProperty.hpp>
 
 class DateProperty : public SingleValueProperty<std::time_t, DateProperty>
 {
