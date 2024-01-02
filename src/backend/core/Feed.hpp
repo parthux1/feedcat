@@ -7,9 +7,9 @@
 #include <chrono>
 #include <list>
 
-#include <Article.hpp>
-#include <network/FullTextParserStrategy.hpp>
-#include <network/parser_rss.hpp>
+#include <core/Article.hpp>
+#include <core/network/FullTextParserStrategy.hpp>
+#include <core/network/parser_rss.hpp>
 
 class Feed
 {
