@@ -19,7 +19,7 @@
 
 #include <core/db/property_serialize_functions.hpp>
 #include <core/ArticlePropertyInterface.hpp>
-
+#include <core/Article.hpp>
 
 /*!
  * \brief Sanitizes table names of a SerizalizedMapping
@@ -53,6 +53,13 @@ public:
         {
             auto mapping = serialize_mapping<T>();
             append_ids(mapping);
+
+            // ArticleBaseProperty has no foreign key.
+            // Bad behaviour to do this here. But ArticleBaseProperty is in core..
+            if(std::is_same_v<T, ArticleBaseProperty>)
+            {
+                mapping.erase("article_ref");
+            }
 
             const auto primary_count = std::count_if(mapping.begin(), mapping.end(), [](const auto& pair){return pair.second == DatabaseFieldType::PRIMARY_KEY;});
             if(primary_count != 1)
@@ -126,5 +133,6 @@ private:
     static void append_ids(SerializedMapping& mapping)
     {
         mapping["id"] = DatabaseFieldType::PRIMARY_KEY;
+        mapping["article_ref"] = DatabaseFieldType::FOREIGN_KEY; // TODO: don't do this for the base property
     }
 };

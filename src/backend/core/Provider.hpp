@@ -6,7 +6,6 @@
 
 #include <core/Feed.hpp>
 #include <core/network/FullTextParserStrategy.hpp>
-#include <core/network/parser_rss.hpp>
 
 class Provider
 {
