@@ -1,11 +1,7 @@
 //
 // Created by parthu on 11/26/23.
 //
-
-#include <gtest/gtest.h>
-
-#include <core/ArticlePropertyHash.hpp>
-#include <core/properties/ArticleBaseProperty.hpp>
+#include "tests_ArticlePropertyHash.hpp"
 
 TEST(ArticlePropertyHash, hash_similar_ptr)
 {
