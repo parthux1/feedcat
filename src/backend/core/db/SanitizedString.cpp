@@ -14,7 +14,7 @@ std::string sanitize(std::string str)
 
 SanitizedString::SanitizedString(std::string str)
 {
-    str = sanitize(str);
+    str_ = sanitize(str);
 }
 
 bool SanitizedString::operator==(const SanitizedString& other) const noexcept
