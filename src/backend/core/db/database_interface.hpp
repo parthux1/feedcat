@@ -18,7 +18,8 @@
 #include <spdlog/spdlog.h>
 
 #include <core/db/property_serialize_functions.hpp>
-#include <core/ArticlePropertyInterface.hpp>
+
+#include <core/properties/ArticleBasePropertyDb.hpp>
 #include <core/Article.hpp>
 
 /*!
