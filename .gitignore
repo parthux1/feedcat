@@ -6,3 +6,7 @@ cmake-build-*
 
 # test runs
 res/test/
+
+# drawio artifacts
+*.drawio.bkp
+*.drawio.dtmp
