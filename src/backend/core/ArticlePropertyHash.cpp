@@ -4,12 +4,6 @@
 
 #include "ArticlePropertyHash.hpp"
 
-ArticlePropertyHash::ArticlePropertyHash(std::size_t value)
-        : value(value)
-{
-
-}
-
 bool ArticlePropertyHash::operator==(const ArticlePropertyHash &other) const
 {
     return value == other.value;

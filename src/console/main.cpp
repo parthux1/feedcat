@@ -1,11 +1,13 @@
 #include <spdlog/spdlog.h>
 
-#include <Feed.hpp>
-#include <properties/ArticleBasePropertyDb.hpp>
+#include <core/Feed.hpp>
+#include <core/properties/ArticleBasePropertyDb.hpp>
+#include <extension/db_impl/database_sqlite.hpp>
+
 int main()
 {
     spdlog::set_level(spdlog::level::debug);
-
+    /*
     Feed f{"https://www.n-tv.de/wirtschaft/rss"};
     f.update();
     auto& article = f.articles.front();
@@ -18,12 +20,13 @@ int main()
         SPDLOG_ERROR("ArticleBaseProperty not found");
         return 1;
     }
+    */
 
-    if(!store_property(base.value(), nullptr))
-    {
-        SPDLOG_ERROR("Could not store property \"{}\". Is Concept PropertyDbStrategy fulfilled?", typeid(base.value()).name());
-        return 1;
-    }
+    ArticleBaseProperty prop{"test-title", "test-url", "test-rss-url", "test-description"};
+    Article a{prop};
+    DatabaseSqlLite db{"test"};
+
+    db.store_property<ArticleBaseProperty>(a);
 }
 
 

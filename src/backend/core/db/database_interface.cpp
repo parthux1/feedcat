@@ -30,3 +30,18 @@ SanitizedValues sanitize(const SerializedValues& vals)
 
     return res;
 }
+
+std::optional<DatabaseID> DatabaseInterface::store_article(const Article &article)
+{
+    SPDLOG_CRITICAL("Not implemented");
+    return std::nullopt;
+    for(const auto&[key, property] : article.properties)
+    {
+    }
+}
+
+void DatabaseInterface::append_ids(SerializedMapping &mapping)
+{
+    mapping["id"] = DatabaseFieldType::PRIMARY_KEY;
+    mapping["article_ref"] = DatabaseFieldType::FOREIGN_KEY; // TODO: don't do this for the base property
+}

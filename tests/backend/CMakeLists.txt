@@ -1,9 +1,15 @@
 set(FEEDCAT_TEST_BACKEND_CORE_SOURCES
+    core/tests_ArticlePropertyHash.hpp
     core/tests_ArticlePropertyHash.cpp
+    core/tests_SingleValueProperty.hpp
     core/tests_SingleValueProperty.cpp
+# DB
+    core/db/tests_SanitizedString.hpp
+    core/db/tests_SanitizedString.cpp
 )
 
 set(FEEDCAT_TEST_BACKEND_EXTENSION_SOURCES
+        extension/sqlite/tests_store_load.hpp
         extension/sqlite/tests_store_load.cpp
 )
 

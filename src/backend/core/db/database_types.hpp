@@ -16,7 +16,8 @@ enum class DatabaseFieldType
     TEXT,
     NUMBER,
     TIMESTAMP,
-    PRIMARY_KEY // primary keys are defined by the database. You don't need to add them to your mapping
+    PRIMARY_KEY, // primary keys are defined by the database. You don't need to add them to your mapping
+    FOREIGN_KEY // foreign keys are defined by the database. You don't need to add them to your mapping
 };
 
 using DatabaseField = std::variant<std::string, int, std::time_t, DatabaseID>;

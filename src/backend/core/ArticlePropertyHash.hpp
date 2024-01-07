@@ -22,20 +22,23 @@ private:
     /*!
      * \brief Use ArticlePropertyHash::create<T>()
      */
-    ArticlePropertyHash(std::size_t value);
+    constexpr ArticlePropertyHash(std::size_t value)
+        : value(value)
+    {
+    }
 public:
     template<typename T>
     requires std::derived_from<T, ArticlePropertyInterface>
-    explicit ArticlePropertyHash(const T* property)
+    explicit constexpr ArticlePropertyHash(const T* property)
+        : value(typeid(T).hash_code())
     {
-        value = typeid(T).hash_code();
     }
 
     template<typename T>
     requires std::derived_from<T, ArticlePropertyInterface>
-    explicit ArticlePropertyHash(const T& property)
+    explicit constexpr ArticlePropertyHash(const T& property)
+        : value(typeid(T).hash_code())
     {
-        value = typeid(T).hash_code();
     }
 
     ~ArticlePropertyHash() = default;
@@ -54,15 +57,14 @@ public:
      */
     template<typename T>
         requires std::derived_from<T, ArticlePropertyInterface>
-    static ArticlePropertyHash create()
+    static constexpr ArticlePropertyHash create()
     {
         return ArticlePropertyHash{typeid(T).hash_code()};
     }
 
     [[nodiscard]] const std::size_t& get() const;
 
-private:
-    std::size_t value;
+    const std::size_t value;
 };
 
 

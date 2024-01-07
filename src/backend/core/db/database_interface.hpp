@@ -46,7 +46,7 @@ public:
      * \brief Stores a property. Creates the corresponding table if it does not exist
      */
     template<PropertyIsStorable T>
-    std::optional<DatabaseID> store_property(const T& property)
+    std::optional<DatabaseID> store_property(const Article& article)
     {
         const SanitizedString table = sanitize(table_name<T>());
 
@@ -76,13 +76,23 @@ public:
                 return std::nullopt;
             }
         }
-        auto data = serialize(property);
+        const std::optional<const T*> property = article.get<T>();
+
+        if(!property)
+        {
+            SPDLOG_ERROR("Could not get property {} from article", table.data());
+            return std::nullopt;
+        }
+
+        auto data = serialize(*property.value());
         const auto data_s = sanitize(data);
 
         const auto res = store_entry(table, data_s);
 
         return res;
     }
+
+    std::optional<DatabaseID> store_article(const Article& article); // aktuell nicht umsetzbar. Braucht reflexion.
 
     /*!
      * \brief Loads a property with the given id if possible
@@ -131,9 +141,5 @@ private:
      * \brief Add internal ID mappings to the given mapping
      * \returns a complete TableMapping for the given property
     */
-    static void append_ids(SerializedMapping& mapping)
-    {
-        mapping["id"] = DatabaseFieldType::PRIMARY_KEY;
-        mapping["article_ref"] = DatabaseFieldType::FOREIGN_KEY; // TODO: don't do this for the base property
-    }
+    static void append_ids(SerializedMapping& mapping);
 };

@@ -3,7 +3,104 @@
 //
 #include "database_sqlite.hpp"
 
-// Static access
+
+DatabaseSqlLite::DatabaseSqlLite(std::string filename)
+{
+    try
+    {
+        if (!filename.ends_with(".sqlite3")) filename.append(".sqlite3");
+        db = std::make_unique<SQLite::Database>(filename.data(), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+        SPDLOG_DEBUG("{} opened.", filename);
+    }
+    catch (const std::exception &e)
+    {
+        SPDLOG_ERROR("Error opening database: {}", e.what());
+        throw e;
+    }
+}
+
+bool DatabaseSqlLite::has_id(const DatabaseID& id) const
+{
+    // TODO: ID column? Do we have a fixed naming?
+    SPDLOG_CRITICAL("Not implemented");
+    return false;
+}
+
+bool DatabaseSqlLite::has_table(const SanitizedString& name) const
+{
+    SQLite::Statement statement(*db, "SELECT name FROM sqlite_master WHERE type='table' AND name=?");
+    statement.bind(1, name.data());
+    SPDLOG_DEBUG("executing query: {}", statement.getExpandedSQL());
+    statement.executeStep();
+    return statement.getColumnCount();
+}
+
+std::list<DatabaseID> DatabaseSqlLite::get_all_ids() const
+{
+    SPDLOG_CRITICAL("Not implemented");
+    return {};
+}
+
+bool DatabaseSqlLite::make_table(const SanitizedString& name, const SanitizedMapping& mapping)
+{
+    int primary_count = 0;
+    std::string primary_key_val;
+    for(const auto& [key, value] : mapping)
+    {
+        if(value == DatabaseFieldType::PRIMARY_KEY)
+        {
+            primary_count++;
+            primary_key_val = key.data();
+            break;
+        }
+    }
+
+    const SanitizedString primary_key{primary_key_val}; // TODO: allow construction with invalid state?
+
+    if(primary_count != 1)
+    {
+        SPDLOG_ERROR("Expected 1 primary key for table {} but found {}.", name.data(), primary_count);
+        return false;
+    }
+
+    const unsigned int cols = mapping.size();
+    std::string statement = "CREATE TABLE IF NOT EXISTS '"+name.data()+"' ( ";
+    int counter = 0;
+    for(const auto& [key, value] : mapping)
+    {
+        statement.append(key.data());
+        if(value == DatabaseFieldType::PRIMARY_KEY) statement.append(" INTEGER PRIMARY KEY ASC");
+
+        // Additional appendix to "normal" columns creation line
+        if(value == DatabaseFieldType::FOREIGN_KEY)
+        {
+            // finish prev statement
+            statement.append("INTEGER, ");
+            const auto appendix = "FOREIGN KEY ("+key.data()+") REFERENCES " + sanitize(table_name<ArticleBaseProperty>()) + "(id)";
+            statement.append(appendix); // additional foreign key info
+        }
+        if(++counter < cols) statement.append(", ");
+    }
+    statement.append(" )");
+
+    SQLite::Statement query(*db, statement);
+    SPDLOG_DEBUG("Executing query: {}", query.getExpandedSQL());
+
+    return query.exec();
+}
+
+std::optional<DatabaseID> DatabaseSqlLite::store_entry(const SanitizedString& table, const SanitizedValues &entry)
+{
+    SPDLOG_CRITICAL("Not implemented");
+    return std::nullopt;
+}
+
+std::optional<SerializedValues> DatabaseSqlLite::load_entry(const SanitizedString& table, const SanitizedMapping& expected_mapping, const DatabaseID& id)
+{
+    SPDLOG_CRITICAL("Not implemented");
+    return std::nullopt;
+}
+
 #if false
 std::shared_ptr<DatabaseSqlLite> DatabaseSqlLite::get_instance(){
     // meyers singleton
